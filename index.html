@@ -42,7 +42,7 @@
       </button>
     </div>
 
-    <nav id="lesson-nav" class="flex-1 overflow-y-auto overflow-x-auto md:overflow-x-visible scrollbar-hide p-4 flex flex-row md:flex-col gap-2 bg-slate-50/40 md:bg-white"></nav>
+    <nav id="day-nav" class="flex-1 overflow-y-auto overflow-x-auto md:overflow-x-visible scrollbar-hide p-4 flex flex-row md:flex-col gap-2 bg-slate-50/40 md:bg-white"></nav>
 
     <div class="p-4 border-t border-slate-100 bg-white mt-auto shrink-0 flex flex-col gap-3">
       <div class="rounded-lg border border-blue-100 bg-blue-50 p-3 shadow-sm">
@@ -87,7 +87,8 @@
       </div>
     </section>
 
-    <section id="lesson-1" class="lesson-content hidden space-y-10">
+    <div id="content-day1" class="day-content space-y-12">
+    <section id="day1-part-1" class="space-y-10">
       <div class="text-center sm:text-left">
         <p class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700 mb-4">ADV 01</p>
         <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-950 mb-4">엑셀 · 워드 · PPT · 한글 문서 자동 작성</h2>
@@ -143,7 +144,7 @@
       </div>
     </section>
 
-    <section id="lesson-2" class="lesson-content hidden space-y-10">
+    <section id="day1-part-2" class="space-y-10">
       <div>
         <p class="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-700 mb-4">REVIEW</p>
         <h2 class="text-3xl font-extrabold text-slate-950 mb-4">라이브러리란?</h2>
@@ -172,7 +173,7 @@
       </div>
     </section>
 
-    <section id="lesson-3" class="lesson-content hidden space-y-10">
+    <section id="day1-part-3" class="space-y-10">
       <div>
         <p class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700 mb-4">BASIC 01</p>
         <h2 class="text-3xl font-extrabold text-slate-950 mb-4">엑셀 분석 Skill</h2>
@@ -199,7 +200,7 @@ for row in ws.iter_rows(min_row=5, values_only=True):
       </div>
     </section>
 
-    <section id="lesson-4" class="lesson-content hidden space-y-10">
+    <section id="day1-part-4" class="space-y-10">
       <div>
         <p class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700 mb-4">BASIC 02</p>
         <h2 class="text-3xl font-extrabold text-slate-950 mb-4">워드 보고서 Skill</h2>
@@ -219,7 +220,7 @@ doc.save('out.docx')</code></pre>
       </div>
     </section>
 
-    <section id="lesson-5" class="lesson-content hidden space-y-10">
+    <section id="day1-part-5" class="space-y-10">
       <div>
         <p class="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-700 mb-4">BASIC 03</p>
         <h2 class="text-3xl font-extrabold text-slate-950 mb-4">PPT Skill</h2>
@@ -240,7 +241,7 @@ for shape in slide.shapes:
       </div>
     </section>
 
-    <section id="lesson-6" class="lesson-content hidden space-y-10">
+    <section id="day1-part-6" class="space-y-10">
       <div>
         <p class="inline-flex items-center rounded-full bg-violet-100 px-3 py-1 text-xs font-bold text-violet-700 mb-4">BASIC 04</p>
         <h2 class="text-3xl font-extrabold text-slate-950 mb-4">한글 Skill</h2>
@@ -262,7 +263,7 @@ for shape in slide.shapes:
       </div>
     </section>
 
-    <section id="lesson-7" class="lesson-content hidden space-y-10">
+    <section id="day1-part-7" class="space-y-10">
       <div>
         <p class="inline-flex items-center rounded-full bg-slate-200 px-3 py-1 text-xs font-bold text-slate-700 mb-4">PIPELINE</p>
         <h2 class="text-3xl font-extrabold text-slate-950 mb-4">4종 파이프라인 연결</h2>
@@ -286,6 +287,36 @@ for shape in slide.shapes:
         <p class="text-sm text-slate-600 mb-4">URL과 목적만 전달하면 Claude가 레포 구조를 분석하고 실행 가능한 Skill 파일을 생성합니다.</p>
         <div class="rounded-lg bg-slate-50 border border-slate-200 p-4 text-sm text-slate-700">"https://github.com/neolord0/hwp2hwpx 참고해서 .hwp를 .hwpx로 변환하는 Skill 만들어줘"</div>
       </div>
+    </section>
+    </div>
+
+    <section id="content-day2" class="day-content hidden rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center">
+      <p class="text-sm font-bold text-slate-400 mb-2">DAY 02</p>
+      <h2 class="text-2xl font-extrabold text-slate-900">2일차 콘텐츠 준비중</h2>
+    </section>
+    <section id="content-day3" class="day-content hidden rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center">
+      <p class="text-sm font-bold text-slate-400 mb-2">DAY 03</p>
+      <h2 class="text-2xl font-extrabold text-slate-900">3일차 콘텐츠 준비중</h2>
+    </section>
+    <section id="content-day4" class="day-content hidden rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center">
+      <p class="text-sm font-bold text-slate-400 mb-2">DAY 04</p>
+      <h2 class="text-2xl font-extrabold text-slate-900">4일차 콘텐츠 준비중</h2>
+    </section>
+    <section id="content-day5" class="day-content hidden rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center">
+      <p class="text-sm font-bold text-slate-400 mb-2">DAY 05</p>
+      <h2 class="text-2xl font-extrabold text-slate-900">5일차 콘텐츠 준비중</h2>
+    </section>
+    <section id="content-day6" class="day-content hidden rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center">
+      <p class="text-sm font-bold text-slate-400 mb-2">DAY 06</p>
+      <h2 class="text-2xl font-extrabold text-slate-900">6일차 콘텐츠 준비중</h2>
+    </section>
+    <section id="content-day7" class="day-content hidden rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center">
+      <p class="text-sm font-bold text-slate-400 mb-2">DAY 07</p>
+      <h2 class="text-2xl font-extrabold text-slate-900">7일차 콘텐츠 준비중</h2>
+    </section>
+    <section id="content-day8" class="day-content hidden rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center">
+      <p class="text-sm font-bold text-slate-400 mb-2">DAY 08</p>
+      <h2 class="text-2xl font-extrabold text-slate-900">8일차 콘텐츠 준비중</h2>
     </section>
   </main>
 
@@ -321,38 +352,39 @@ for shape in slide.shapes:
   </div>
 
   <script>
-    const lessons = [
-      { id: 1, title: '1. 개요', icon: 'layers' },
-      { id: 2, title: '2. 라이브러리', icon: 'package' },
-      { id: 3, title: '3. 엑셀 Skill', icon: 'table-2' },
-      { id: 4, title: '4. 워드 Skill', icon: 'file-text' },
-      { id: 5, title: '5. PPT Skill', icon: 'presentation' },
-      { id: 6, title: '6. 한글 Skill', icon: 'file-archive' },
-      { id: 7, title: '7. 파이프라인', icon: 'workflow' }
+    const days = [
+      { id: 1, title: '1일차: 문서 자동화', icon: 'file-cog' },
+      { id: 2, title: '2일차: 준비중', icon: 'lock' },
+      { id: 3, title: '3일차: 준비중', icon: 'lock' },
+      { id: 4, title: '4일차: 준비중', icon: 'lock' },
+      { id: 5, title: '5일차: 준비중', icon: 'lock' },
+      { id: 6, title: '6일차: 준비중', icon: 'lock' },
+      { id: 7, title: '7일차: 준비중', icon: 'lock' },
+      { id: 8, title: '8일차: 준비중', icon: 'lock' }
     ];
-    let currentLesson = 1;
+    let currentDay = 1;
     let isInstructorMode = false;
     const instructorPassword = '1';
 
     function renderNav() {
-      const nav = document.getElementById('lesson-nav');
+      const nav = document.getElementById('day-nav');
       nav.innerHTML = '';
-      lessons.forEach((lesson) => {
-        const isActive = lesson.id === currentLesson;
+      days.forEach((day) => {
+        const isActive = day.id === currentDay;
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.onclick = () => switchLesson(lesson.id);
+        btn.onclick = () => switchDay(day.id);
         btn.className = 'shrink-0 md:w-full px-4 py-3 rounded-lg text-sm font-bold transition-colors flex items-center gap-3 border ' + (isActive ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-white text-slate-600 hover:bg-blue-50 hover:text-blue-700 border-slate-200');
-        btn.innerHTML = `<i data-lucide="${lesson.icon}" class="w-4 h-4"></i><span>${lesson.title}</span>${isActive ? '<i data-lucide="chevron-right" class="w-4 h-4 ml-auto"></i>' : ''}`;
+        btn.innerHTML = `<i data-lucide="${day.icon}" class="w-4 h-4"></i><span>${day.title}</span>${isActive ? '<i data-lucide="chevron-right" class="w-4 h-4 ml-auto"></i>' : ''}`;
         nav.appendChild(btn);
       });
       lucide.createIcons();
     }
 
-    function switchLesson(id) {
-      document.querySelectorAll('.lesson-content').forEach((el) => el.classList.add('hidden'));
-      document.getElementById(`lesson-${id}`).classList.remove('hidden');
-      currentLesson = id;
+    function switchDay(id) {
+      document.querySelectorAll('.day-content').forEach((el) => el.classList.add('hidden'));
+      document.getElementById(`content-day${id}`).classList.remove('hidden');
+      currentDay = id;
       renderNav();
       if (window.innerWidth < 768) window.scrollTo(0, 0);
     }
@@ -457,7 +489,7 @@ for shape in slide.shapes:
     }
 
     renderNav();
-    switchLesson(1);
+    switchDay(1);
   </script>
 </body>
 </html>
