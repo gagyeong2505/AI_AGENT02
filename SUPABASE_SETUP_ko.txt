@@ -2,7 +2,7 @@ Supabase 설정
 
 1. Storage 버킷 생성
 
-`course-files`라는 이름의 공개 Storage 버킷을 생성합니다.
+`COURSE-FILES`라는 이름의 공개 Storage 버킷을 생성합니다.
 
 2. 강사 계정 생성
 
@@ -17,13 +17,13 @@ create policy "course files are readable"
 on storage.objects
 for select
 to anon, authenticated
-using (bucket_id = 'course-files');
+using (bucket_id = 'COURSE-FILES');
 
 create policy "authenticated users can upload course files"
 on storage.objects
 for insert
 to authenticated
-with check (bucket_id = 'course-files');
+with check (bucket_id = 'COURSE-FILES');
 ```
 
 4. 사이트 설정

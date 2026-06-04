@@ -2,7 +2,7 @@
 
 ## 1. Create storage bucket
 
-Create a public Storage bucket named `course-files`.
+Create a public Storage bucket named `COURSE-FILES`.
 
 ## 2. Create instructor account
 
@@ -17,13 +17,13 @@ create policy "course files are readable"
 on storage.objects
 for select
 to anon, authenticated
-using (bucket_id = 'course-files');
+using (bucket_id = 'COURSE-FILES');
 
 create policy "authenticated users can upload course files"
 on storage.objects
 for insert
 to authenticated
-with check (bucket_id = 'course-files');
+with check (bucket_id = 'COURSE-FILES');
 ```
 
 ## 4. Configure the site
