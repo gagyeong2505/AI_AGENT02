@@ -347,7 +347,7 @@ for shape in slide.shapes:
         Supabase 설정값이 비어 있습니다. `SUPABASE_URL`과 `SUPABASE_ANON_KEY`를 입력한 뒤 배포하세요.
       </div>
 
-      <section class="rounded-lg border border-slate-200 bg-slate-50 p-4 mb-4">
+      <section id="storage-auth-panel" class="hidden rounded-lg border border-slate-200 bg-slate-50 p-4 mb-4">
         <div class="flex items-center justify-between gap-3 mb-3">
           <h4 class="font-bold text-slate-950 flex items-center gap-2"><i data-lucide="lock-keyhole" class="w-4 h-4 text-blue-600"></i>강사용 로그인</h4>
           <button id="storage-logout-btn" type="button" onclick="storageLogout()" class="hidden text-xs font-bold text-slate-500 hover:text-slate-900">로그아웃</button>
@@ -411,6 +411,16 @@ for shape in slide.shapes:
     const supabaseClient = hasStorageConfig ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
     let isStorageLoggedIn = false;
     let isStorageManageMode = false;
+    let isStorageAdminVisible = false;
+
+    function applyStorageAdminVisibility() {
+      document.getElementById('storage-auth-panel').classList.toggle('hidden', !isStorageAdminVisible);
+      document.getElementById('storage-login-form').classList.toggle('hidden', !isStorageAdminVisible || isStorageLoggedIn);
+      document.getElementById('storage-upload-panel').classList.toggle('hidden', !isStorageAdminVisible || !isStorageLoggedIn);
+      document.getElementById('storage-logout-btn').classList.toggle('hidden', !isStorageAdminVisible || !isStorageLoggedIn);
+      document.getElementById('storage-manage-btn').classList.toggle('hidden', !isStorageAdminVisible || !isStorageLoggedIn);
+      document.getElementById('storage-manage-actions').classList.toggle('hidden', !isStorageAdminVisible || !isStorageLoggedIn || !isStorageManageMode);
+    }
 
     function formatBytes(bytes) {
       if (!bytes) return '-';
@@ -463,13 +473,16 @@ for shape in slide.shapes:
       const isLoggedIn = Boolean(data.session);
       isStorageLoggedIn = isLoggedIn;
       if (!isLoggedIn) isStorageManageMode = false;
-      document.getElementById('storage-login-form').classList.toggle('hidden', isLoggedIn);
-      document.getElementById('storage-upload-panel').classList.toggle('hidden', !isLoggedIn);
-      document.getElementById('storage-logout-btn').classList.toggle('hidden', !isLoggedIn);
-      document.getElementById('storage-manage-btn').classList.toggle('hidden', !isLoggedIn);
-      document.getElementById('storage-manage-actions').classList.toggle('hidden', !isLoggedIn || !isStorageManageMode);
+      applyStorageAdminVisibility();
       showStorageMessage(isLoggedIn ? '강사 계정으로 로그인되어 있습니다.' : '로그인하면 업로드 영역이 열립니다.', isLoggedIn ? 'success' : 'info');
     }
+
+    window.setStorageAdminVisible = function setStorageAdminVisible(isVisible) {
+      isStorageAdminVisible = isVisible;
+      if (!isVisible) isStorageManageMode = false;
+      applyStorageAdminVisibility();
+      loadCourseFiles();
+    };
 
     window.storageLogin = async function storageLogin() {
       if (!supabaseClient) {
@@ -673,6 +686,7 @@ for shape in slide.shapes:
       if (isInstructorMode) {
         isInstructorMode = false;
         document.getElementById('edit-memo-btn').classList.add('hidden');
+        if (window.setStorageAdminVisible) window.setStorageAdminVisible(false);
         return;
       }
       const modal = document.getElementById('auth-modal');
@@ -695,6 +709,7 @@ for shape in slide.shapes:
         const btn = document.getElementById('edit-memo-btn');
         btn.classList.remove('hidden');
         btn.classList.add('flex');
+        if (window.setStorageAdminVisible) window.setStorageAdminVisible(true);
       } else {
         document.getElementById('auth-error').classList.remove('hidden');
       }
