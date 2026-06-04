@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Agent 02</title>
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { letter-spacing: 0; }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #93c5fd; border-radius: 999px; }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-blue-200 selection:text-blue-950 flex flex-col md:flex-row">
+  <aside class="w-full md:w-72 bg-white border-b md:border-b-0 md:border-r border-slate-200 flex flex-col sticky top-0 z-40 md:h-screen shadow-sm md:shadow-none shrink-0">
+    <div class="p-4 md:p-6 flex items-center justify-between md:flex-col md:items-start md:gap-6 border-b border-slate-100 bg-white">
+      <div>
+        <h1 class="flex items-center gap-2 text-xl font-extrabold text-blue-950">
+          <i data-lucide="file-cog" class="w-6 h-6 text-blue-600"></i>
+          <span>AI 에이전트 2</span>
+        </h1>
+        <p class="hidden md:block text-sm font-medium text-slate-500 mt-2">문서 자동화 Skill 실습</p>
+      </div>
+      <button type="button" onclick="promptEditMode()" class="flex items-center justify-center w-10 h-10 md:w-full md:h-auto md:justify-between md:px-4 md:py-2.5 bg-slate-50 hover:bg-blue-50 text-slate-500 hover:text-blue-700 rounded-full md:rounded-lg border md:border-slate-200 transition-colors" title="강사 모드 설정">
+        <span class="hidden md:block text-sm font-bold">강사 모드 설정</span>
+        <i data-lucide="settings" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <nav id="lesson-nav" class="flex-1 overflow-y-auto overflow-x-auto md:overflow-x-visible scrollbar-hide p-4 flex flex-row md:flex-col gap-2 bg-slate-50/40 md:bg-white"></nav>
+
+    <div class="p-4 border-t border-slate-100 bg-white mt-auto shrink-0 flex flex-col gap-3">
+      <div class="rounded-lg border border-blue-100 bg-blue-50 p-3 shadow-sm">
+        <p class="text-xs font-extrabold text-blue-950 flex items-center gap-1.5">
+          <i data-lucide="terminal" class="w-3.5 h-3.5 text-blue-600"></i>
+          빠른 실행 명령어
+        </p>
+        <div class="mt-2 flex items-center justify-between gap-2 bg-white border border-blue-200 rounded-lg p-1.5 pl-2.5 shadow-inner overflow-hidden">
+          <code class="text-[11px] font-mono text-blue-700 truncate select-all">claude --dangerously-skip-permissions</code>
+          <button type="button" onclick="copyQuickCommand(this)" class="shrink-0 rounded-md bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 text-xs font-bold transition-colors">
+            <span class="default-state inline-flex items-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i>복사</span>
+            <span class="copied-state hidden items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i>완료</span>
+          </button>
+        </div>
+      </div>
+      <button type="button" onclick="openResourceModal()" class="w-full flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-lg transition-colors">
+        <i data-lucide="folder-down" class="w-4 h-4"></i>
+        실습 파일 체크
+      </button>
+    </div>
+  </aside>
+
+  <main class="flex-1 w-full min-w-0 mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8 pb-24">
+    <section id="instructor-memo-container" class="rounded-lg border border-blue-200 bg-blue-50 p-6 shadow-sm relative overflow-hidden mb-10">
+      <div class="absolute left-0 top-0 bottom-0 w-1 bg-blue-600"></div>
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="font-bold text-blue-950 flex items-center gap-2">
+          <i data-lucide="megaphone" class="w-5 h-5 text-blue-600"></i>
+          강사 공지 및 메모
+        </h2>
+        <button id="edit-memo-btn" type="button" onclick="toggleMemoEdit()" class="hidden items-center gap-1.5 text-xs font-bold bg-white border border-blue-300 text-blue-700 px-4 py-2 rounded-lg hover:bg-blue-50 transition-colors">
+          <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> 메모 수정
+        </button>
+      </div>
+      <div id="instructor-memo-display" class="text-slate-700 text-sm whitespace-pre-wrap leading-relaxed">아직 등록된 메모가 없습니다.</div>
+      <div id="instructor-memo-edit-area" class="hidden mt-3">
+        <textarea id="instructor-memo-input" class="w-full h-32 p-4 border border-blue-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white resize-none shadow-inner" placeholder="강의 중 전달할 메모나 공지를 입력하세요."></textarea>
+        <div class="flex justify-end gap-2 mt-3">
+          <button type="button" onclick="toggleMemoEdit()" class="px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors">취소</button>
+          <button type="button" onclick="saveInstructorMemo()" class="px-4 py-2 rounded-lg text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors">저장하기</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="lesson-1" class="lesson-content hidden space-y-10">
+      <div class="text-center sm:text-left">
+        <p class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700 mb-4">ADV 01</p>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-950 mb-4">엑셀 · 워드 · PPT · 한글 문서 자동 작성</h2>
+        <p class="text-lg text-slate-600 max-w-3xl leading-relaxed">4종 오피스 문서를 자동 생성하는 Python Skill을 만들고, 하나의 에이전트 명령으로 문서 파이프라인을 연결합니다.</p>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-2">
+        <article class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700"><i data-lucide="table-2" class="w-5 h-5"></i></span>
+            <div>
+              <h3 class="font-bold text-slate-950">엑셀 분석 Skill</h3>
+              <p class="text-sm text-slate-500">openpyxl · 매출 데이터 분석</p>
+            </div>
+          </div>
+          <p class="text-sm text-slate-600">`매출데이터_템플릿.xlsx`를 읽어 월별 합계, 평균, 최대 거래처를 계산합니다.</p>
+        </article>
+        <article class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 text-blue-700"><i data-lucide="file-text" class="w-5 h-5"></i></span>
+            <div>
+              <h3 class="font-bold text-slate-950">워드 보고서 Skill</h3>
+              <p class="text-sm text-slate-500">python-docx · 템플릿 치환</p>
+            </div>
+          </div>
+          <p class="text-sm text-slate-600">보고서 템플릿의 플레이스홀더를 분석 결과로 채워 `report.docx`를 생성합니다.</p>
+        </article>
+        <article class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 text-amber-700"><i data-lucide="presentation" class="w-5 h-5"></i></span>
+            <div>
+              <h3 class="font-bold text-slate-950">PPT Skill</h3>
+              <p class="text-sm text-slate-500">python-pptx · 발표자료 생성</p>
+            </div>
+          </div>
+          <p class="text-sm text-slate-600">회사 범용 템플릿 9장 구조에 맞춰 조사 내용과 요약을 발표자료로 만듭니다.</p>
+        </article>
+        <article class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-violet-100 text-violet-700"><i data-lucide="file-archive" class="w-5 h-5"></i></span>
+            <div>
+              <h3 class="font-bold text-slate-950">한글 Skill</h3>
+              <p class="text-sm text-slate-500">python-hwpx · ZIP-level 치환</p>
+            </div>
+          </div>
+          <p class="text-sm text-slate-600">`gonggong` 템플릿 기반으로 .hwpx 보고서를 생성하고 브라우저에서 검토합니다.</p>
+        </article>
+      </div>
+
+      <div class="rounded-lg border border-blue-200 bg-blue-600 p-6 text-white shadow-sm">
+        <h3 class="text-lg font-bold mb-3">오늘의 목표</h3>
+        <p class="text-blue-50">엑셀 데이터 하나를 입력하면 워드, PPT, 한글 보고서가 동시에 생성되는 자동화 흐름을 설계합니다.</p>
+      </div>
+    </section>
+
+    <section id="lesson-2" class="lesson-content hidden space-y-10">
+      <div>
+        <p class="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-700 mb-4">REVIEW</p>
+        <h2 class="text-3xl font-extrabold text-slate-950 mb-4">라이브러리란?</h2>
+        <p class="text-lg text-slate-600 max-w-3xl">직접 만들 필요 없이 설치해서 바로 사용하는 기능 묶음입니다. 오늘은 문서 파일을 다루는 Python 라이브러리를 Skill로 감쌉니다.</p>
+      </div>
+      <div class="grid gap-6 md:grid-cols-2">
+        <div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <h3 class="font-bold text-slate-950 mb-4">사용 방식</h3>
+          <div class="space-y-3">
+            <div class="rounded-lg bg-slate-900 p-4 text-slate-100 text-sm font-mono">pip install openpyxl</div>
+            <div class="rounded-lg bg-slate-900 p-4 text-slate-100 text-sm font-mono">import openpyxl</div>
+          </div>
+        </div>
+        <div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <h3 class="font-bold text-slate-950 mb-4">오늘 사용할 라이브러리</h3>
+          <ul class="space-y-3 text-sm text-slate-700">
+            <li class="flex items-center justify-between border-b border-slate-100 pb-2"><strong>openpyxl</strong><span>엑셀 .xlsx</span></li>
+            <li class="flex items-center justify-between border-b border-slate-100 pb-2"><strong>python-docx</strong><span>워드 .docx</span></li>
+            <li class="flex items-center justify-between border-b border-slate-100 pb-2"><strong>python-pptx</strong><span>PPT .pptx</span></li>
+            <li class="flex items-center justify-between"><strong>python-hwpx</strong><span>한글 .hwpx</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="rounded-lg border border-amber-200 bg-amber-50 p-5 text-sm text-amber-900">
+        Claude에게 Skill 생성을 요청하면 `pip install`, `import`, 파일 입출력 코드를 함께 구성하도록 지시할 수 있습니다.
+      </div>
+    </section>
+
+    <section id="lesson-3" class="lesson-content hidden space-y-10">
+      <div>
+        <p class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700 mb-4">BASIC 01</p>
+        <h2 class="text-3xl font-extrabold text-slate-950 mb-4">엑셀 분석 Skill</h2>
+        <p class="text-lg text-slate-600 max-w-3xl">`openpyxl`로 매출 템플릿을 읽고 월별 합계, 평균, 최대 거래처를 분석합니다.</p>
+      </div>
+      <div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+        <h3 class="font-bold text-slate-950 mb-3">Claude 요청</h3>
+        <div class="rounded-lg bg-emerald-50 border border-emerald-200 p-4 text-emerald-900 font-semibold">"openpyxl 설치하고 엑셀 파일 읽는 Skill 만들어줘"</div>
+      </div>
+      <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-slate-700">
+          <span class="text-sm font-bold text-slate-200">핵심 코드</span>
+          <button type="button" onclick="copyCode(this)" class="text-xs font-bold text-slate-200 hover:text-white flex items-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i>복사</button>
+        </div>
+        <pre class="p-5 overflow-x-auto text-sm text-slate-100"><code>wb = load_workbook('매출데이터_템플릿.xlsx')
+ws = wb['매출 데이터']
+for row in ws.iter_rows(min_row=5, values_only=True):
+    print(row)  # No, 날짜, 거래처, 제품명, 매출액 ...</code></pre>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-3">
+        <div class="rounded-lg bg-white border border-slate-200 p-5 shadow-sm"><strong class="block text-slate-950 mb-1">1</strong><p class="text-sm text-slate-600">템플릿 다운로드 후 데이터 5건 이상 입력</p></div>
+        <div class="rounded-lg bg-white border border-slate-200 p-5 shadow-sm"><strong class="block text-slate-950 mb-1">2</strong><p class="text-sm text-slate-600">월별 합계와 평균 분석 요청</p></div>
+        <div class="rounded-lg bg-white border border-slate-200 p-5 shadow-sm"><strong class="block text-slate-950 mb-1">3</strong><p class="text-sm text-slate-600">최대 거래처와 평균 매출액 확인</p></div>
+      </div>
+    </section>
+
+    <section id="lesson-4" class="lesson-content hidden space-y-10">
+      <div>
+        <p class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700 mb-4">BASIC 02</p>
+        <h2 class="text-3xl font-extrabold text-slate-950 mb-4">워드 보고서 Skill</h2>
+        <p class="text-lg text-slate-600 max-w-3xl">`python-docx`로 보고서 템플릿의 제목, 개요, 표, 결론 영역을 자동으로 채웁니다.</p>
+      </div>
+      <div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+        <h3 class="font-bold text-slate-950 mb-3">템플릿 치환 패턴</h3>
+        <pre class="rounded-lg bg-slate-900 p-5 overflow-x-auto text-sm text-slate-100"><code>doc = Document('보고서_템플릿.docx')
+for p in doc.paragraphs:
+    if '[보고서 제목]' in p.text:
+        p.runs[0].text = '실제 보고서 제목'
+doc.save('out.docx')</code></pre>
+      </div>
+      <div class="rounded-lg border border-blue-200 bg-blue-50 p-5">
+        <h3 class="font-bold text-blue-950 mb-2">실습 프롬프트</h3>
+        <p class="text-blue-900 font-semibold">"엑셀 분석 결과를 바탕으로 보고서_템플릿.docx 양식에 맞게 보고서 만들어줘"</p>
+      </div>
+    </section>
+
+    <section id="lesson-5" class="lesson-content hidden space-y-10">
+      <div>
+        <p class="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-700 mb-4">BASIC 03</p>
+        <h2 class="text-3xl font-extrabold text-slate-950 mb-4">PPT Skill</h2>
+        <p class="text-lg text-slate-600 max-w-3xl">`python-pptx`로 회사 범용 템플릿을 불러와 표지, 목차, 내용, 요약, 로드맵 슬라이드를 자동 구성합니다.</p>
+      </div>
+      <div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+        <h3 class="font-bold text-slate-950 mb-3">템플릿 활용 코드</h3>
+        <pre class="rounded-lg bg-slate-900 p-5 overflow-x-auto text-sm text-slate-100"><code>prs = Presentation('회사_범용_템플릿.pptx')
+slide = prs.slides[3]  # 내용 슬라이드
+for shape in slide.shapes:
+    if shape.has_text_frame:
+        shape.text_frame.text = '새 내용'</code></pre>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-3">
+        <div class="rounded-lg bg-white border border-slate-200 p-5 shadow-sm"><h3 class="font-bold mb-2">조사</h3><p class="text-sm text-slate-600">주제 웹조사와 핵심 근거 수집</p></div>
+        <div class="rounded-lg bg-white border border-slate-200 p-5 shadow-sm"><h3 class="font-bold mb-2">구성</h3><p class="text-sm text-slate-600">9장 템플릿 구조에 맞게 배치</p></div>
+        <div class="rounded-lg bg-white border border-slate-200 p-5 shadow-sm"><h3 class="font-bold mb-2">검토</h3><p class="text-sm text-slate-600">슬라이드 제목과 본문 길이 확인</p></div>
+      </div>
+    </section>
+
+    <section id="lesson-6" class="lesson-content hidden space-y-10">
+      <div>
+        <p class="inline-flex items-center rounded-full bg-violet-100 px-3 py-1 text-xs font-bold text-violet-700 mb-4">BASIC 04</p>
+        <h2 class="text-3xl font-extrabold text-slate-950 mb-4">한글 Skill</h2>
+        <p class="text-lg text-slate-600 max-w-3xl">`python-hwpx`와 gonggong 템플릿을 사용해 .hwpx 보고서를 생성합니다.</p>
+      </div>
+      <div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+        <h3 class="font-bold text-slate-950 mb-4">4단계 워크플로우</h3>
+        <ol class="grid gap-3 md:grid-cols-4 text-sm">
+          <li class="rounded-lg bg-violet-50 border border-violet-100 p-4"><strong class="block text-violet-700 mb-1">1. 복사</strong>report-template.hwpx 복사</li>
+          <li class="rounded-lg bg-violet-50 border border-violet-100 p-4"><strong class="block text-violet-700 mb-1">2. 조사</strong>ObjectFinder로 플레이스홀더 확인</li>
+          <li class="rounded-lg bg-violet-50 border border-violet-100 p-4"><strong class="block text-violet-700 mb-1">3. 치환</strong>zip_replace()로 내용 변경</li>
+          <li class="rounded-lg bg-violet-50 border border-violet-100 p-4"><strong class="block text-violet-700 mb-1">4. 후처리</strong>fix_namespaces.py 실행</li>
+        </ol>
+      </div>
+      <div class="rounded-lg border border-violet-200 bg-violet-50 p-5">
+        <h3 class="font-bold text-violet-950 mb-2">실습 프롬프트</h3>
+        <p class="text-violet-900 font-semibold">"gonggong report-template.hwpx로 [주제] 보고서 만들어줘"</p>
+        <p class="text-sm text-violet-700 mt-3">생성된 파일은 `hwp.polarisoffice.com`에서 설치 없이 열어 확인합니다.</p>
+      </div>
+    </section>
+
+    <section id="lesson-7" class="lesson-content hidden space-y-10">
+      <div>
+        <p class="inline-flex items-center rounded-full bg-slate-200 px-3 py-1 text-xs font-bold text-slate-700 mb-4">PIPELINE</p>
+        <h2 class="text-3xl font-extrabold text-slate-950 mb-4">4종 파이프라인 연결</h2>
+        <p class="text-lg text-slate-600 max-w-3xl">엑셀 Skill의 분석 결과를 워드, PPT, 한글 Skill에 전달해 문서 3종을 동시에 생성합니다.</p>
+      </div>
+      <div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+        <div class="grid gap-4 md:grid-cols-4">
+          <div class="rounded-lg border border-emerald-200 bg-emerald-50 p-4"><strong class="text-emerald-700">엑셀</strong><p class="text-sm mt-2">데이터 읽기와 분석</p></div>
+          <div class="rounded-lg border border-blue-200 bg-blue-50 p-4"><strong class="text-blue-700">워드</strong><p class="text-sm mt-2">보고서 템플릿 채우기</p></div>
+          <div class="rounded-lg border border-amber-200 bg-amber-50 p-4"><strong class="text-amber-700">PPT</strong><p class="text-sm mt-2">발표자료 생성</p></div>
+          <div class="rounded-lg border border-violet-200 bg-violet-50 p-4"><strong class="text-violet-700">한글</strong><p class="text-sm mt-2">.hwpx 보고서 생성</p></div>
+        </div>
+      </div>
+      <div class="rounded-lg border border-slate-200 bg-slate-900 p-6 text-white shadow-sm">
+        <h3 class="font-bold mb-3">최종 에이전트 명령</h3>
+        <p class="text-lg font-semibold text-blue-200">"매출데이터_템플릿.xlsx 읽어서 워드, PPT, 한글 보고서를 모두 동시에 만들어줘"</p>
+        <p class="text-sm text-slate-300 mt-3">완료 후 `docx`, `pptx`, `hwpx` 파일이 모두 생성됐는지 확인합니다.</p>
+      </div>
+      <div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+        <h3 class="font-bold text-slate-950 mb-3">GitHub 레포 → Skill 자동 제작</h3>
+        <p class="text-sm text-slate-600 mb-4">URL과 목적만 전달하면 Claude가 레포 구조를 분석하고 실행 가능한 Skill 파일을 생성합니다.</p>
+        <div class="rounded-lg bg-slate-50 border border-slate-200 p-4 text-sm text-slate-700">"https://github.com/neolord0/hwp2hwpx 참고해서 .hwp를 .hwpx로 변환하는 Skill 만들어줘"</div>
+      </div>
+    </section>
+  </main>
+
+  <div id="auth-modal" class="fixed inset-0 z-[200] hidden items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-lg shadow-2xl p-6 w-80 max-w-[90%]">
+      <h3 class="text-lg font-bold text-slate-950 mb-2">강사 모드</h3>
+      <p class="text-sm text-slate-600 mb-4">비밀번호를 입력하세요.</p>
+      <input id="auth-password" type="password" onkeydown="if(event.key==='Enter') checkPassword()" class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <p id="auth-error" class="hidden text-sm text-red-600 mt-2">비밀번호가 올바르지 않습니다.</p>
+      <div class="flex justify-end gap-2 mt-5">
+        <button type="button" onclick="closeAuthModal()" class="px-4 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-bold">취소</button>
+        <button type="button" onclick="checkPassword()" class="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-bold">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="resource-modal" class="fixed inset-0 z-[200] hidden items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-lg shadow-2xl p-6 w-[520px] max-w-[95%]">
+      <div class="flex items-start justify-between gap-4 mb-4">
+        <div>
+          <h3 class="text-lg font-bold text-slate-950">실습 파일 체크</h3>
+          <p class="text-sm text-slate-600 mt-1">실습 전 아래 파일을 같은 작업 폴더에 준비합니다.</p>
+        </div>
+        <button type="button" onclick="closeResourceModal()" class="p-1.5 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <ul class="space-y-3 text-sm">
+        <li class="flex items-center gap-3 rounded-lg border border-slate-200 p-3"><i data-lucide="sheet" class="w-4 h-4 text-emerald-600"></i>매출데이터_템플릿.xlsx</li>
+        <li class="flex items-center gap-3 rounded-lg border border-slate-200 p-3"><i data-lucide="file-text" class="w-4 h-4 text-blue-600"></i>보고서_템플릿.docx</li>
+        <li class="flex items-center gap-3 rounded-lg border border-slate-200 p-3"><i data-lucide="presentation" class="w-4 h-4 text-amber-600"></i>회사_범용_템플릿.pptx</li>
+        <li class="flex items-center gap-3 rounded-lg border border-slate-200 p-3"><i data-lucide="file-archive" class="w-4 h-4 text-violet-600"></i>report-template.hwpx</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    const lessons = [
+      { id: 1, title: '1. 개요', icon: 'layers' },
+      { id: 2, title: '2. 라이브러리', icon: 'package' },
+      { id: 3, title: '3. 엑셀 Skill', icon: 'table-2' },
+      { id: 4, title: '4. 워드 Skill', icon: 'file-text' },
+      { id: 5, title: '5. PPT Skill', icon: 'presentation' },
+      { id: 6, title: '6. 한글 Skill', icon: 'file-archive' },
+      { id: 7, title: '7. 파이프라인', icon: 'workflow' }
+    ];
+    let currentLesson = 1;
+    let isInstructorMode = false;
+    const instructorPassword = '1';
+
+    function renderNav() {
+      const nav = document.getElementById('lesson-nav');
+      nav.innerHTML = '';
+      lessons.forEach((lesson) => {
+        const isActive = lesson.id === currentLesson;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.onclick = () => switchLesson(lesson.id);
+        btn.className = 'shrink-0 md:w-full px-4 py-3 rounded-lg text-sm font-bold transition-colors flex items-center gap-3 border ' + (isActive ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-white text-slate-600 hover:bg-blue-50 hover:text-blue-700 border-slate-200');
+        btn.innerHTML = `<i data-lucide="${lesson.icon}" class="w-4 h-4"></i><span>${lesson.title}</span>${isActive ? '<i data-lucide="chevron-right" class="w-4 h-4 ml-auto"></i>' : ''}`;
+        nav.appendChild(btn);
+      });
+      lucide.createIcons();
+    }
+
+    function switchLesson(id) {
+      document.querySelectorAll('.lesson-content').forEach((el) => el.classList.add('hidden'));
+      document.getElementById(`lesson-${id}`).classList.remove('hidden');
+      currentLesson = id;
+      renderNav();
+      if (window.innerWidth < 768) window.scrollTo(0, 0);
+    }
+
+    function promptEditMode() {
+      if (isInstructorMode) {
+        isInstructorMode = false;
+        document.getElementById('edit-memo-btn').classList.add('hidden');
+        return;
+      }
+      const modal = document.getElementById('auth-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.getElementById('auth-password').value = '';
+      document.getElementById('auth-error').classList.add('hidden');
+      setTimeout(() => document.getElementById('auth-password').focus(), 100);
+    }
+
+    function closeAuthModal() {
+      document.getElementById('auth-modal').classList.add('hidden');
+      document.getElementById('auth-modal').classList.remove('flex');
+    }
+
+    function checkPassword() {
+      if (document.getElementById('auth-password').value === instructorPassword) {
+        isInstructorMode = true;
+        closeAuthModal();
+        const btn = document.getElementById('edit-memo-btn');
+        btn.classList.remove('hidden');
+        btn.classList.add('flex');
+      } else {
+        document.getElementById('auth-error').classList.remove('hidden');
+      }
+    }
+
+    function toggleMemoEdit() {
+      const display = document.getElementById('instructor-memo-display');
+      const area = document.getElementById('instructor-memo-edit-area');
+      const input = document.getElementById('instructor-memo-input');
+      if (area.classList.contains('hidden')) {
+        display.classList.add('hidden');
+        area.classList.remove('hidden');
+        input.value = display.innerText === '아직 등록된 메모가 없습니다.' ? '' : display.innerText;
+        input.focus();
+      } else {
+        display.classList.remove('hidden');
+        area.classList.add('hidden');
+      }
+    }
+
+    function saveInstructorMemo() {
+      const input = document.getElementById('instructor-memo-input');
+      document.getElementById('instructor-memo-display').innerText = input.value.trim() || '아직 등록된 메모가 없습니다.';
+      toggleMemoEdit();
+    }
+
+    function copyText(text, btn) {
+      navigator.clipboard.writeText(text).then(() => updateCopyUI(btn)).catch(() => {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        textarea.remove();
+        updateCopyUI(btn);
+      });
+    }
+
+    function copyQuickCommand(btn) {
+      copyText(btn.parentElement.querySelector('code').innerText, btn);
+    }
+
+    function copyCode(btn) {
+      const code = btn.closest('.overflow-hidden').querySelector('code').innerText;
+      copyText(code, btn);
+    }
+
+    function updateCopyUI(btn) {
+      const defaultState = btn.querySelector('.default-state');
+      const copiedState = btn.querySelector('.copied-state');
+      if (!defaultState || !copiedState) return;
+      defaultState.classList.add('hidden');
+      copiedState.classList.remove('hidden');
+      copiedState.classList.add('inline-flex');
+      setTimeout(() => {
+        defaultState.classList.remove('hidden');
+        copiedState.classList.add('hidden');
+        copiedState.classList.remove('inline-flex');
+      }, 1600);
+    }
+
+    function openResourceModal() {
+      const modal = document.getElementById('resource-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeResourceModal() {
+      const modal = document.getElementById('resource-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    renderNav();
+    switchLesson(1);
+  </script>
+</body>
+</html>
