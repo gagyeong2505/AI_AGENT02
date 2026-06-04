@@ -380,9 +380,12 @@ for shape in slide.shapes:
         <div id="storage-manage-actions" class="hidden mb-3 rounded-lg border border-red-200 bg-red-50 p-3">
           <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <p class="text-xs font-bold text-red-800">삭제할 파일을 선택하세요.</p>
-            <button type="button" onclick="deleteSelectedCourseFiles()" class="inline-flex items-center justify-center gap-1 rounded-lg bg-red-600 px-3 py-2 text-xs font-bold text-white hover:bg-red-700">
-              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>선택 삭제
-            </button>
+            <div class="flex items-center gap-2">
+              <button id="storage-select-all-btn" type="button" onclick="toggleAllCourseFiles()" class="inline-flex items-center justify-center gap-1 rounded-lg border border-red-200 bg-white px-3 py-2 text-xs font-bold text-red-700 hover:bg-red-100">전체 선택</button>
+              <button type="button" onclick="deleteSelectedCourseFiles()" class="inline-flex items-center justify-center gap-1 rounded-lg bg-red-600 px-3 py-2 text-xs font-bold text-white hover:bg-red-700">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>선택 삭제
+              </button>
+            </div>
           </div>
         </div>
         <div id="course-file-list" class="space-y-2 text-sm">
@@ -498,6 +501,16 @@ for shape in slide.shapes:
       loadCourseFiles();
     };
 
+    window.toggleAllCourseFiles = function toggleAllCourseFiles() {
+      const checkboxes = Array.from(document.querySelectorAll('.course-file-checkbox'));
+      if (!checkboxes.length) return;
+      const shouldCheck = checkboxes.some((checkbox) => !checkbox.checked);
+      checkboxes.forEach((checkbox) => {
+        checkbox.checked = shouldCheck;
+      });
+      document.getElementById('storage-select-all-btn').innerText = shouldCheck ? '전체 해제' : '전체 선택';
+    };
+
     window.loadCourseFiles = async function loadCourseFiles() {
       const list = document.getElementById('course-file-list');
       if (!supabaseClient) {
@@ -546,6 +559,8 @@ for shape in slide.shapes:
           </div>
         `;
       }).join('');
+      const selectAllBtn = document.getElementById('storage-select-all-btn');
+      if (selectAllBtn) selectAllBtn.innerText = '전체 선택';
       lucide.createIcons();
     };
 
