@@ -334,22 +334,211 @@ for shape in slide.shapes:
   </div>
 
   <div id="resource-modal" class="fixed inset-0 z-[200] hidden items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-    <div class="bg-white rounded-lg shadow-2xl p-6 w-[520px] max-w-[95%]">
+    <div class="bg-white rounded-lg shadow-2xl p-6 w-[720px] max-w-[95%] max-h-[90vh] overflow-y-auto custom-scrollbar">
       <div class="flex items-start justify-between gap-4 mb-4">
         <div>
-          <h3 class="text-lg font-bold text-slate-950">실습 파일 체크</h3>
-          <p class="text-sm text-slate-600 mt-1">실습 전 아래 파일을 같은 작업 폴더에 준비합니다.</p>
+          <h3 class="text-lg font-bold text-slate-950">수업 자료 업로드 / 다운로드</h3>
+          <p class="text-sm text-slate-600 mt-1">강사는 자료를 업로드하고, 수강생은 등록된 파일을 내려받습니다.</p>
         </div>
         <button type="button" onclick="closeResourceModal()" class="p-1.5 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
-      <ul class="space-y-3 text-sm">
-        <li class="flex items-center gap-3 rounded-lg border border-slate-200 p-3"><i data-lucide="sheet" class="w-4 h-4 text-emerald-600"></i>매출데이터_템플릿.xlsx</li>
-        <li class="flex items-center gap-3 rounded-lg border border-slate-200 p-3"><i data-lucide="file-text" class="w-4 h-4 text-blue-600"></i>보고서_템플릿.docx</li>
-        <li class="flex items-center gap-3 rounded-lg border border-slate-200 p-3"><i data-lucide="presentation" class="w-4 h-4 text-amber-600"></i>회사_범용_템플릿.pptx</li>
-        <li class="flex items-center gap-3 rounded-lg border border-slate-200 p-3"><i data-lucide="file-archive" class="w-4 h-4 text-violet-600"></i>report-template.hwpx</li>
-      </ul>
+
+      <div id="storage-config-warning" class="hidden rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 mb-4">
+        Supabase 설정값이 비어 있습니다. `SUPABASE_URL`과 `SUPABASE_ANON_KEY`를 입력한 뒤 배포하세요.
+      </div>
+
+      <section class="rounded-lg border border-slate-200 bg-slate-50 p-4 mb-4">
+        <div class="flex items-center justify-between gap-3 mb-3">
+          <h4 class="font-bold text-slate-950 flex items-center gap-2"><i data-lucide="lock-keyhole" class="w-4 h-4 text-blue-600"></i>강사용 로그인</h4>
+          <button id="storage-logout-btn" type="button" onclick="storageLogout()" class="hidden text-xs font-bold text-slate-500 hover:text-slate-900">로그아웃</button>
+        </div>
+        <div id="storage-login-form" class="grid gap-2 sm:grid-cols-[1fr_1fr_auto]">
+          <input id="storage-email" type="email" placeholder="강사 이메일" class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <input id="storage-password" type="password" placeholder="비밀번호" class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <button type="button" onclick="storageLogin()" class="rounded-lg bg-slate-900 px-4 py-2 text-sm font-bold text-white hover:bg-slate-800">로그인</button>
+        </div>
+        <p id="storage-auth-status" class="mt-2 text-xs text-slate-500">로그인하면 업로드 영역이 열립니다.</p>
+      </section>
+
+      <section id="storage-upload-panel" class="hidden rounded-lg border border-blue-200 bg-blue-50 p-4 mb-4">
+        <h4 class="font-bold text-blue-950 mb-3 flex items-center gap-2"><i data-lucide="upload-cloud" class="w-4 h-4 text-blue-600"></i>자료 업로드</h4>
+        <div class="grid gap-2 sm:grid-cols-[1fr_auto]">
+          <input id="course-file-input" type="file" multiple accept=".xlsx,.docx,.pptx,.hwpx,.pdf,.zip" class="rounded-lg border border-blue-200 bg-white px-3 py-2 text-sm">
+          <button type="button" onclick="uploadCourseFiles()" class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-bold text-white hover:bg-blue-700">업로드</button>
+        </div>
+        <p class="mt-2 text-xs text-blue-700">허용 형식: xlsx, docx, pptx, hwpx, pdf, zip</p>
+      </section>
+
+      <section>
+        <div class="flex items-center justify-between gap-3 mb-3">
+          <h4 class="font-bold text-slate-950 flex items-center gap-2"><i data-lucide="download" class="w-4 h-4 text-emerald-600"></i>다운로드 자료</h4>
+          <button type="button" onclick="loadCourseFiles()" class="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-bold text-slate-600 hover:bg-slate-50">새로고침</button>
+        </div>
+        <div id="course-file-list" class="space-y-2 text-sm">
+          <div class="rounded-lg border border-slate-200 p-4 text-slate-500">파일 목록을 불러오는 중입니다.</div>
+        </div>
+      </section>
     </div>
   </div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+    const SUPABASE_URL = 'YOUR_SUPABASE_PROJECT_URL';
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+    const STORAGE_BUCKET = 'course-files';
+    const ALLOWED_EXTENSIONS = ['xlsx', 'docx', 'pptx', 'hwpx', 'pdf', 'zip'];
+    const COURSE_FOLDER = 'day01';
+
+    const hasStorageConfig = !SUPABASE_URL.includes('YOUR_') && !SUPABASE_ANON_KEY.includes('YOUR_');
+    const supabaseClient = hasStorageConfig ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+    function formatBytes(bytes) {
+      if (!bytes) return '-';
+      const units = ['B', 'KB', 'MB', 'GB'];
+      let size = bytes;
+      let index = 0;
+      while (size >= 1024 && index < units.length - 1) {
+        size /= 1024;
+        index += 1;
+      }
+      return `${size.toFixed(size >= 10 || index === 0 ? 0 : 1)} ${units[index]}`;
+    }
+
+    function safeFileName(name) {
+      const cleaned = name.normalize('NFC').replace(/[\\/:*?"<>|#%{}^~[\]`]/g, '_');
+      return cleaned.replace(/\s+/g, '_');
+    }
+
+    function getExtension(fileName) {
+      return fileName.split('.').pop().toLowerCase();
+    }
+
+    function showStorageMessage(message, type = 'info') {
+      const status = document.getElementById('storage-auth-status');
+      const color = type === 'error' ? 'text-red-600' : type === 'success' ? 'text-emerald-700' : 'text-slate-500';
+      status.className = `mt-2 text-xs ${color}`;
+      status.innerText = message;
+    }
+
+    async function refreshStorageAuth() {
+      if (!supabaseClient) return;
+      const { data } = await supabaseClient.auth.getSession();
+      const isLoggedIn = Boolean(data.session);
+      document.getElementById('storage-login-form').classList.toggle('hidden', isLoggedIn);
+      document.getElementById('storage-upload-panel').classList.toggle('hidden', !isLoggedIn);
+      document.getElementById('storage-logout-btn').classList.toggle('hidden', !isLoggedIn);
+      showStorageMessage(isLoggedIn ? '강사 계정으로 로그인되어 있습니다.' : '로그인하면 업로드 영역이 열립니다.', isLoggedIn ? 'success' : 'info');
+    }
+
+    window.storageLogin = async function storageLogin() {
+      if (!supabaseClient) {
+        showStorageMessage('Supabase 설정값을 먼저 입력하세요.', 'error');
+        return;
+      }
+      const email = document.getElementById('storage-email').value.trim();
+      const password = document.getElementById('storage-password').value;
+      const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+      if (error) {
+        showStorageMessage(error.message, 'error');
+        return;
+      }
+      await refreshStorageAuth();
+    };
+
+    window.storageLogout = async function storageLogout() {
+      if (!supabaseClient) return;
+      await supabaseClient.auth.signOut();
+      await refreshStorageAuth();
+    };
+
+    window.loadCourseFiles = async function loadCourseFiles() {
+      const list = document.getElementById('course-file-list');
+      if (!supabaseClient) {
+        document.getElementById('storage-config-warning').classList.remove('hidden');
+        list.innerHTML = '<div class="rounded-lg border border-amber-200 bg-amber-50 p-4 text-amber-900">Supabase 설정값을 입력하면 파일 목록이 표시됩니다.</div>';
+        return;
+      }
+
+      list.innerHTML = '<div class="rounded-lg border border-slate-200 p-4 text-slate-500">파일 목록을 불러오는 중입니다.</div>';
+      const { data, error } = await supabaseClient.storage.from(STORAGE_BUCKET).list(COURSE_FOLDER, {
+        limit: 100,
+        sortBy: { column: 'created_at', order: 'desc' }
+      });
+
+      if (error) {
+        list.innerHTML = `<div class="rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">${error.message}</div>`;
+        return;
+      }
+
+      const files = (data || []).filter((file) => file.name && !file.name.startsWith('.'));
+      if (!files.length) {
+        list.innerHTML = '<div class="rounded-lg border border-slate-200 p-4 text-slate-500">아직 업로드된 파일이 없습니다.</div>';
+        return;
+      }
+
+      list.innerHTML = files.map((file) => {
+        const path = `${COURSE_FOLDER}/${file.name}`;
+        const { data: publicData } = supabaseClient.storage.from(STORAGE_BUCKET).getPublicUrl(path);
+        return `
+          <div class="flex flex-col gap-3 rounded-lg border border-slate-200 p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="min-w-0">
+              <p class="truncate font-bold text-slate-900">${file.name}</p>
+              <p class="text-xs text-slate-500">${formatBytes(file.metadata?.size)} · ${file.created_at ? new Date(file.created_at).toLocaleString('ko-KR') : ''}</p>
+            </div>
+            <a href="${publicData.publicUrl}" download class="inline-flex items-center justify-center gap-1 rounded-lg bg-emerald-600 px-3 py-2 text-xs font-bold text-white hover:bg-emerald-700">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i>다운로드
+            </a>
+          </div>
+        `;
+      }).join('');
+      lucide.createIcons();
+    };
+
+    window.uploadCourseFiles = async function uploadCourseFiles() {
+      if (!supabaseClient) {
+        showStorageMessage('Supabase 설정값을 먼저 입력하세요.', 'error');
+        return;
+      }
+      const input = document.getElementById('course-file-input');
+      const files = Array.from(input.files || []);
+      if (!files.length) {
+        showStorageMessage('업로드할 파일을 선택하세요.', 'error');
+        return;
+      }
+
+      for (const file of files) {
+        const extension = getExtension(file.name);
+        if (!ALLOWED_EXTENSIONS.includes(extension)) {
+          showStorageMessage(`${file.name}: 허용되지 않은 파일 형식입니다.`, 'error');
+          return;
+        }
+      }
+
+      showStorageMessage('업로드 중입니다...');
+      for (const file of files) {
+        const path = `${COURSE_FOLDER}/${Date.now()}_${safeFileName(file.name)}`;
+        const { error } = await supabaseClient.storage.from(STORAGE_BUCKET).upload(path, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
+        if (error) {
+          showStorageMessage(error.message, 'error');
+          return;
+        }
+      }
+
+      input.value = '';
+      showStorageMessage('업로드가 완료됐습니다.', 'success');
+      await loadCourseFiles();
+    };
+
+    if (!hasStorageConfig) {
+      document.getElementById('storage-config-warning').classList.remove('hidden');
+    }
+    refreshStorageAuth();
+    loadCourseFiles();
+  </script>
 
   <script>
     const days = [
