@@ -24,6 +24,12 @@ on storage.objects
 for insert
 to authenticated
 with check (bucket_id = 'COURSE-FILES');
+
+create policy "authenticated users can delete course files"
+on storage.objects
+for delete
+to authenticated
+using (bucket_id = 'COURSE-FILES');
 ```
 
 4. 사이트 설정
