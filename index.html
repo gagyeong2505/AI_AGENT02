@@ -409,8 +409,15 @@ for shape in slide.shapes:
     }
 
     function safeFileName(name) {
-      const cleaned = name.normalize('NFC').replace(/[\\/:*?"<>|#%{}^~[\]`]/g, '_');
-      return cleaned.replace(/\s+/g, '_');
+      const extension = getExtension(name);
+      const baseName = name.replace(/\.[^/.]+$/, '');
+      const cleaned = baseName
+        .normalize('NFKD')
+        .replace(/[^\w.-]+/g, '_')
+        .replace(/_+/g, '_')
+        .replace(/^_+|_+$/g, '')
+        .slice(0, 80);
+      return `${cleaned || 'file'}.${extension}`;
     }
 
     function escapeHtml(value) {
