@@ -381,14 +381,17 @@ for shape in slide.shapes:
     </div>
   </div>
 
+  <script src="./supabase-config.js"></script>
+
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-    const SUPABASE_URL = 'YOUR_SUPABASE_PROJECT_URL';
-    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
-    const STORAGE_BUCKET = 'course-files';
+    const storageConfig = window.AI_AGENT02_SUPABASE_CONFIG || {};
+    const SUPABASE_URL = storageConfig.url || 'YOUR_SUPABASE_PROJECT_URL';
+    const SUPABASE_ANON_KEY = storageConfig.anonKey || 'YOUR_SUPABASE_ANON_KEY';
+    const STORAGE_BUCKET = storageConfig.bucket || 'course-files';
     const ALLOWED_EXTENSIONS = ['xlsx', 'docx', 'pptx', 'hwpx', 'pdf', 'zip'];
-    const COURSE_FOLDER = 'day01';
+    const COURSE_FOLDER = storageConfig.folder || 'day01';
 
     const hasStorageConfig = !SUPABASE_URL.includes('YOUR_') && !SUPABASE_ANON_KEY.includes('YOUR_');
     const supabaseClient = hasStorageConfig ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
@@ -408,6 +411,16 @@ for shape in slide.shapes:
     function safeFileName(name) {
       const cleaned = name.normalize('NFC').replace(/[\\/:*?"<>|#%{}^~[\]`]/g, '_');
       return cleaned.replace(/\s+/g, '_');
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, (char) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[char]));
     }
 
     function getExtension(fileName) {
@@ -480,13 +493,15 @@ for shape in slide.shapes:
       list.innerHTML = files.map((file) => {
         const path = `${COURSE_FOLDER}/${file.name}`;
         const { data: publicData } = supabaseClient.storage.from(STORAGE_BUCKET).getPublicUrl(path);
+        const fileName = escapeHtml(file.name);
+        const publicUrl = escapeHtml(publicData.publicUrl);
         return `
           <div class="flex flex-col gap-3 rounded-lg border border-slate-200 p-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="min-w-0">
-              <p class="truncate font-bold text-slate-900">${file.name}</p>
+              <p class="truncate font-bold text-slate-900">${fileName}</p>
               <p class="text-xs text-slate-500">${formatBytes(file.metadata?.size)} · ${file.created_at ? new Date(file.created_at).toLocaleString('ko-KR') : ''}</p>
             </div>
-            <a href="${publicData.publicUrl}" download class="inline-flex items-center justify-center gap-1 rounded-lg bg-emerald-600 px-3 py-2 text-xs font-bold text-white hover:bg-emerald-700">
+            <a href="${publicUrl}" download class="inline-flex items-center justify-center gap-1 rounded-lg bg-emerald-600 px-3 py-2 text-xs font-bold text-white hover:bg-emerald-700">
               <i data-lucide="download" class="w-3.5 h-3.5"></i>다운로드
             </a>
           </div>

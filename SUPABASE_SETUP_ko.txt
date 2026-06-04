@@ -1,0 +1,33 @@
+Supabase 설정
+
+1. Storage 버킷 생성
+
+`course-files`라는 이름의 공개 Storage 버킷을 생성합니다.
+
+2. 강사 계정 생성
+
+Supabase Authentication에서 업로드에 사용할 강사 이메일/비밀번호 계정을 생성합니다.
+
+3. Storage 정책 추가
+
+Supabase SQL Editor에서 아래 정책을 실행합니다.
+
+```sql
+create policy "course files are readable"
+on storage.objects
+for select
+to anon, authenticated
+using (bucket_id = 'course-files');
+
+create policy "authenticated users can upload course files"
+on storage.objects
+for insert
+to authenticated
+with check (bucket_id = 'course-files');
+```
+
+4. 사이트 설정
+
+`supabase-config.js`를 열고 `url`과 `anonKey` 값을 교체합니다.
+
+GitHub Pages로 배포할 경우 `supabase-config.js`도 함께 커밋합니다. anon key는 브라우저에서 사용하도록 설계된 키입니다. 단, service role key는 절대 추가하지 마세요.
