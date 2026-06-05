@@ -88,6 +88,236 @@
     </section>
 
     <div id="content-day1" class="day-content space-y-12">
+    <section id="day1-cli-briefing" class="space-y-10">
+      <div class="text-center sm:text-left">
+        <p class="inline-flex items-center rounded-full bg-slate-900 px-3 py-1 text-xs font-bold text-white mb-4">BASIC 08</p>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-950 mb-4">CLI · GitHub · Antigravity 준비</h2>
+        <p class="text-lg text-slate-600 max-w-3xl leading-relaxed">문서 자동화 Skill을 확장하기 전에 터미널 명령으로 여러 도구를 연결하는 기본 흐름을 정리합니다.</p>
+      </div>
+
+      <div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+        <div class="flex items-start gap-4">
+          <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-slate-900 text-white"><i data-lucide="terminal" class="w-5 h-5"></i></span>
+          <div>
+            <h3 class="text-xl font-extrabold text-slate-950">CLI란 무엇인가</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-600">Command Line Interface는 텍스트 명령으로 프로그램을 직접 제어하는 방식입니다. Claude Code, GitHub CLI, Antigravity CLI처럼 각각의 도구를 명령어로 호출하고 결과를 다음 작업에 연결할 수 있습니다.</p>
+          </div>
+        </div>
+        <div class="mt-5 rounded-lg overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
+          <div class="flex items-center justify-between px-4 py-3 border-b border-slate-700">
+            <span class="text-sm font-bold text-slate-200">명령어 기본 구조</span>
+            <button type="button" onclick="copyCode(this)" class="text-xs font-bold text-slate-200 hover:text-white flex items-center gap-1">
+              <span class="default-state inline-flex items-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i>복사</span>
+              <span class="copied-state hidden items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i>완료</span>
+            </button>
+          </div>
+          <pre class="p-5 overflow-x-auto text-sm text-slate-100"><code>[도구] [명령] [--옵션] [인수]</code></pre>
+        </div>
+        <div class="mt-5 grid gap-4 md:grid-cols-3">
+          <article class="rounded-lg border border-blue-100 bg-blue-50 p-4">
+            <h4 class="font-bold text-blue-950">Claude Code</h4>
+            <p class="mt-2 text-sm text-blue-900">파일 편집, 코드 실행, MCP, Skill 실행을 담당합니다.</p>
+          </article>
+          <article class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+            <h4 class="font-bold text-slate-950">GitHub CLI</h4>
+            <p class="mt-2 text-sm text-slate-600">저장소, PR, 이슈를 터미널에서 관리합니다.</p>
+          </article>
+          <article class="rounded-lg border border-emerald-100 bg-emerald-50 p-4">
+            <h4 class="font-bold text-emerald-950">Antigravity CLI</h4>
+            <p class="mt-2 text-sm text-emerald-900">터미널에서 Google Antigravity에 직접 질문합니다.</p>
+          </article>
+        </div>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        <article class="rounded-lg border border-blue-200 bg-blue-50 p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600 text-white"><i data-lucide="workflow" class="w-5 h-5"></i></span>
+            <h3 class="font-extrabold text-blue-950">Claude Code CLI</h3>
+          </div>
+          <ul class="space-y-2 text-sm text-blue-950">
+            <li>+ 자동화와 스크립팅에 적합</li>
+            <li>+ Hooks, Skills, MCP 같은 고급 기능 지원</li>
+            <li>+ 반복 작업과 파이프라인 연결에 강함</li>
+            <li class="pt-2 text-blue-800">- 터미널 기본 지식이 필요하고 시각적 작업에는 불편할 수 있음</li>
+          </ul>
+        </article>
+        <article class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-slate-700"><i data-lucide="monitor" class="w-5 h-5"></i></span>
+            <h3 class="font-extrabold text-slate-950">Claude Desktop</h3>
+          </div>
+          <ul class="space-y-2 text-sm text-slate-700">
+            <li>+ GUI 기반이라 비개발자도 접근하기 쉬움</li>
+            <li>+ Projects 단위 관리와 파일 드래그앤드롭에 편리</li>
+            <li>+ CLI와 세션 공유 가능</li>
+            <li class="pt-2 text-slate-500">- 고급 자동화 스크립팅과 파이프라인 연결에는 제한이 있음</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+        <div class="flex items-start gap-4 mb-5">
+          <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-slate-900 text-white"><i data-lucide="github" class="w-5 h-5"></i></span>
+          <div>
+            <h3 class="text-xl font-extrabold text-slate-950">GitHub 계정과 CLI 인증</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-600">GitHub는 코드 버전 관리, 원격 저장소 백업, 팀 협업의 기반입니다. GitHub CLI를 인증해두면 저장소, PR, 이슈 작업을 Claude Code와 연결할 수 있습니다.</p>
+          </div>
+        </div>
+        <div class="grid gap-4 md:grid-cols-2">
+          <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
+            <div class="flex items-center justify-between px-4 py-3 border-b border-slate-700">
+              <span class="text-sm font-bold text-slate-200">GitHub 가입</span>
+              <button type="button" onclick="copyCode(this)" class="text-xs font-bold text-slate-200 hover:text-white flex items-center gap-1">
+                <span class="default-state inline-flex items-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i>복사</span>
+                <span class="copied-state hidden items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i>완료</span>
+              </button>
+            </div>
+            <pre class="p-5 overflow-x-auto text-sm text-slate-100"><code>github.com/signup</code></pre>
+          </div>
+          <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
+            <div class="flex items-center justify-between px-4 py-3 border-b border-slate-700">
+              <span class="text-sm font-bold text-slate-200">Windows 설치</span>
+              <button type="button" onclick="copyCode(this)" class="text-xs font-bold text-slate-200 hover:text-white flex items-center gap-1">
+                <span class="default-state inline-flex items-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i>복사</span>
+                <span class="copied-state hidden items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i>완료</span>
+              </button>
+            </div>
+            <pre class="p-5 overflow-x-auto text-sm text-slate-100"><code>winget install GitHub.cli</code></pre>
+          </div>
+          <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
+            <div class="flex items-center justify-between px-4 py-3 border-b border-slate-700">
+              <span class="text-sm font-bold text-slate-200">macOS 설치</span>
+              <button type="button" onclick="copyCode(this)" class="text-xs font-bold text-slate-200 hover:text-white flex items-center gap-1">
+                <span class="default-state inline-flex items-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i>복사</span>
+                <span class="copied-state hidden items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i>완료</span>
+              </button>
+            </div>
+            <pre class="p-5 overflow-x-auto text-sm text-slate-100"><code>brew install gh</code></pre>
+          </div>
+          <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
+            <div class="flex items-center justify-between px-4 py-3 border-b border-slate-700">
+              <span class="text-sm font-bold text-slate-200">인증 확인</span>
+              <button type="button" onclick="copyCode(this)" class="text-xs font-bold text-slate-200 hover:text-white flex items-center gap-1">
+                <span class="default-state inline-flex items-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i>복사</span>
+                <span class="copied-state hidden items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i>완료</span>
+              </button>
+            </div>
+            <pre class="p-5 overflow-x-auto text-sm text-slate-100"><code>gh auth status</code></pre>
+          </div>
+        </div>
+        <div class="mt-4 rounded-lg overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
+          <div class="flex items-center justify-between px-4 py-3 border-b border-slate-700">
+            <span class="text-sm font-bold text-slate-200">스코프 지정 인증</span>
+            <button type="button" onclick="copyCode(this)" class="text-xs font-bold text-slate-200 hover:text-white flex items-center gap-1">
+              <span class="default-state inline-flex items-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i>복사</span>
+              <span class="copied-state hidden items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i>완료</span>
+            </button>
+          </div>
+          <pre class="p-5 overflow-x-auto text-sm text-slate-100"><code>gh auth login --scopes repo,delete_repo,workflow,gist,read:org,admin:public_key,write:packages</code></pre>
+        </div>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        <article class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <h3 class="text-xl font-extrabold text-slate-950 mb-4">GitHub CLI Skill 실습</h3>
+          <div class="space-y-4">
+            <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
+              <div class="flex items-center justify-between px-4 py-3 border-b border-slate-700">
+                <span class="text-sm font-bold text-slate-200">저장소 목록</span>
+                <button type="button" onclick="copyCode(this)" class="text-xs font-bold text-slate-200 hover:text-white flex items-center gap-1">
+                  <span class="default-state inline-flex items-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i>복사</span>
+                  <span class="copied-state hidden items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i>완료</span>
+                </button>
+              </div>
+              <pre class="p-5 overflow-x-auto text-sm text-slate-100"><code>gh repo list</code></pre>
+            </div>
+            <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
+              <div class="flex items-center justify-between px-4 py-3 border-b border-slate-700">
+                <span class="text-sm font-bold text-slate-200">PR 목록</span>
+                <button type="button" onclick="copyCode(this)" class="text-xs font-bold text-slate-200 hover:text-white flex items-center gap-1">
+                  <span class="default-state inline-flex items-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i>복사</span>
+                  <span class="copied-state hidden items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i>완료</span>
+                </button>
+              </div>
+              <pre class="p-5 overflow-x-auto text-sm text-slate-100"><code>gh pr list</code></pre>
+            </div>
+            <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
+              <div class="flex items-center justify-between px-4 py-3 border-b border-slate-700">
+                <span class="text-sm font-bold text-slate-200">이슈 목록</span>
+                <button type="button" onclick="copyCode(this)" class="text-xs font-bold text-slate-200 hover:text-white flex items-center gap-1">
+                  <span class="default-state inline-flex items-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i>복사</span>
+                  <span class="copied-state hidden items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i>완료</span>
+                </button>
+              </div>
+              <pre class="p-5 overflow-x-auto text-sm text-slate-100"><code>gh issue list</code></pre>
+            </div>
+            <div class="rounded-lg overflow-hidden border border-blue-200 bg-blue-600 shadow-sm">
+              <div class="flex items-center justify-between px-4 py-3 border-b border-blue-500">
+                <span class="text-sm font-bold text-blue-50">Claude 요청</span>
+                <button type="button" onclick="copyCode(this)" class="text-xs font-bold text-blue-50 hover:text-white flex items-center gap-1">
+                  <span class="default-state inline-flex items-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i>복사</span>
+                  <span class="copied-state hidden items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i>완료</span>
+                </button>
+              </div>
+              <pre class="p-5 overflow-x-auto text-sm text-white whitespace-pre-wrap"><code>gh cli로 내 저장소 목록과 최근 PR 상태를 정리해주는 스킬을 만들어줘</code></pre>
+            </div>
+          </div>
+        </article>
+
+        <article class="rounded-lg border border-emerald-200 bg-emerald-50 p-6 shadow-sm">
+          <h3 class="text-xl font-extrabold text-emerald-950 mb-4">Antigravity CLI 실습</h3>
+          <p class="text-sm leading-relaxed text-emerald-900 mb-4">Antigravity CLI의 비대화형 호출을 사용하면 질문을 보내고 응답을 바로 받을 수 있습니다. Claude 안에서 이 명령을 호출하는 Skill을 만들면 두 AI를 함께 쓰는 흐름이 됩니다.</p>
+          <div class="space-y-4">
+            <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
+              <div class="flex items-center justify-between px-4 py-3 border-b border-slate-700">
+                <span class="text-sm font-bold text-slate-200">설치</span>
+                <button type="button" onclick="copyCode(this)" class="text-xs font-bold text-slate-200 hover:text-white flex items-center gap-1">
+                  <span class="default-state inline-flex items-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i>복사</span>
+                  <span class="copied-state hidden items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i>완료</span>
+                </button>
+              </div>
+              <pre class="p-5 overflow-x-auto text-sm text-slate-100"><code>curl -fsSL https://antigravity.google/cli/install.sh | bash</code></pre>
+            </div>
+            <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
+              <div class="flex items-center justify-between px-4 py-3 border-b border-slate-700">
+                <span class="text-sm font-bold text-slate-200">기본 사용법</span>
+                <button type="button" onclick="copyCode(this)" class="text-xs font-bold text-slate-200 hover:text-white flex items-center gap-1">
+                  <span class="default-state inline-flex items-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i>복사</span>
+                  <span class="copied-state hidden items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i>완료</span>
+                </button>
+              </div>
+              <pre class="p-5 overflow-x-auto text-sm text-slate-100"><code>agy -p "질문이나 지시사항"</code></pre>
+            </div>
+            <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
+              <div class="flex items-center justify-between px-4 py-3 border-b border-slate-700">
+                <span class="text-sm font-bold text-slate-200">직접 질문</span>
+                <button type="button" onclick="copyCode(this)" class="text-xs font-bold text-slate-200 hover:text-white flex items-center gap-1">
+                  <span class="default-state inline-flex items-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i>복사</span>
+                  <span class="copied-state hidden items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i>완료</span>
+                </button>
+              </div>
+              <pre class="p-5 overflow-x-auto text-sm text-slate-100"><code>agy -p "Claude Code와 Antigravity CLI의 차이점을 간단히 설명해줘"</code></pre>
+            </div>
+            <div class="rounded-lg overflow-hidden border border-emerald-300 bg-white shadow-sm">
+              <div class="flex items-center justify-between px-4 py-3 border-b border-emerald-200">
+                <span class="text-sm font-bold text-emerald-950">Claude 요청</span>
+                <button type="button" onclick="copyCode(this)" class="text-xs font-bold text-emerald-800 hover:text-emerald-950 flex items-center gap-1">
+                  <span class="default-state inline-flex items-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i>복사</span>
+                  <span class="copied-state hidden items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i>완료</span>
+                </button>
+              </div>
+              <pre class="p-5 overflow-x-auto text-sm text-emerald-950 whitespace-pre-wrap"><code>bash로 agy -p 를 호출해서 내 질문에 Antigravity가 답하는 스킬을 만들어줘</code></pre>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="rounded-lg border border-slate-200 bg-slate-900 p-6 text-white shadow-sm">
+        <h3 class="text-lg font-bold mb-3">연결 목표</h3>
+        <p class="text-slate-200">Claude Code + GitHub CLI + Antigravity CLI를 조합하면 저장소 상태를 확인하고, 외부 AI에게 의견을 묻고, 그 결과를 Skill 자동화로 이어가는 파이프라인을 만들 수 있습니다.</p>
+      </div>
+    </section>
     <section id="day1-part-1" class="space-y-10">
       <div class="text-center sm:text-left">
         <p class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700 mb-4">ADV 01</p>
