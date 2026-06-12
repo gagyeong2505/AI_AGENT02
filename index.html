@@ -699,10 +699,199 @@ for shape in slide.shapes:
       </div>
     </section>
     </div>
-    <section id="content-day3" class="day-content hidden rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center">
-      <p class="text-sm font-bold text-slate-400 mb-2">DAY 03</p>
-      <h2 class="text-2xl font-extrabold text-slate-900">3일차 콘텐츠 준비중</h2>
+    <div id="content-day3" class="day-content hidden space-y-12">
+    <section id="day3-overview" class="space-y-10">
+      <div class="text-center sm:text-left">
+        <p class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700 mb-4">ADV 03</p>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-950 mb-4">GWS CLI로 Google Workspace 자동화</h2>
+        <p class="text-lg text-slate-600 max-w-3xl leading-relaxed">Claude가 `gws` 명령어를 직접 실행해 Drive, Gmail, Calendar, Sheets, Docs, Forms를 제어하는 흐름을 구성합니다. 수강생은 명령어를 몰라도 자연어 요청만으로 Workspace 작업을 자동화할 수 있습니다.</p>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-4">
+        <article class="rounded-lg border border-emerald-200 bg-emerald-50 p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-600 text-white"><i data-lucide="download" class="w-5 h-5"></i></span>
+            <h3 class="font-bold text-emerald-950">설치</h3>
+          </div>
+          <p class="text-sm leading-relaxed text-emerald-900">통합 설치 프롬프트로 `gws`, gcloud SDK, GCP 프로젝트 설정을 순서대로 준비합니다.</p>
+        </article>
+        <article class="rounded-lg border border-blue-200 bg-blue-50 p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600 text-white"><i data-lucide="shield-check" class="w-5 h-5"></i></span>
+            <h3 class="font-bold text-blue-950">인증</h3>
+          </div>
+          <p class="text-sm leading-relaxed text-blue-900">Drive, Gmail, Calendar, Sheets, Docs, Forms 스코프를 한 번에 인증해 Claude가 CLI를 사용할 수 있게 합니다.</p>
+        </article>
+        <article class="rounded-lg border border-amber-200 bg-amber-50 p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-500 text-white"><i data-lucide="file-text" class="w-5 h-5"></i></span>
+            <h3 class="font-bold text-amber-950">Skill 문서화</h3>
+          </div>
+          <p class="text-sm leading-relaxed text-amber-900">사용법을 `gws_skill.md`로 정리해 자연어 요청을 gws 명령으로 자동 변환합니다.</p>
+        </article>
+        <article class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-900 text-white"><i data-lucide="workflow" class="w-5 h-5"></i></span>
+            <h3 class="font-bold text-slate-950">실습 4종</h3>
+          </div>
+          <p class="text-sm leading-relaxed text-slate-600">Drive, Gmail, Calendar, Sheets·Docs·Forms 생성 작업을 실제 계정에서 확인합니다.</p>
+        </article>
+      </div>
+
+      <div class="rounded-lg border border-slate-200 bg-slate-900 p-6 text-white shadow-sm">
+        <h3 class="text-lg font-bold mb-3">오늘의 목표</h3>
+        <p class="text-slate-200">설치와 인증을 마친 뒤, Claude가 Google Workspace 작업을 자연어 요청에서 CLI 실행까지 이어가도록 Skill 기반 자동화 흐름을 만듭니다.</p>
+      </div>
     </section>
+
+    <section id="day3-install" class="space-y-10">
+      <div>
+        <p class="inline-flex items-center rounded-full bg-slate-900 px-3 py-1 text-xs font-bold text-white mb-4">SETUP</p>
+        <h2 class="text-3xl font-extrabold text-slate-950 mb-4">GWS CLI 통합 설치 프롬프트</h2>
+        <p class="text-lg text-slate-600 max-w-3xl">아래 흐름을 Claude에 요청하면 설치부터 OAuth 인증 준비까지 단계별로 진행합니다. OAuth 클라이언트 생성 단계에서는 Playwright MCP가 GCP Console 화면을 스냅샷으로 확인하며 안내합니다.</p>
+      </div>
+
+      <div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+        <h3 class="font-bold text-slate-950 mb-4">설치와 인증 순서</h3>
+        <ol class="grid gap-3 md:grid-cols-2 text-sm">
+          <li class="rounded-lg border border-slate-200 bg-slate-50 p-4"><strong class="block text-slate-950 mb-1">1. gws 설치</strong>`npm install -g @googleworkspace/cli`를 일반 터미널에서 실행합니다.</li>
+          <li class="rounded-lg border border-slate-200 bg-slate-50 p-4"><strong class="block text-slate-950 mb-1">2. gcloud 인증</strong>`gcloud auth login --launch-browser`로 Google 계정 인증을 진행합니다.</li>
+          <li class="rounded-lg border border-slate-200 bg-slate-50 p-4"><strong class="block text-slate-950 mb-1">3. GCP 프로젝트 설정</strong>프로젝트 생성 후 `gws auth setup`을 실행하고 Forms API까지 활성화합니다.</li>
+          <li class="rounded-lg border border-slate-200 bg-slate-50 p-4"><strong class="block text-slate-950 mb-1">4. OAuth 클라이언트</strong>동의 화면, 테스트 사용자, 클라이언트 ID 생성 과정을 안내받습니다.</li>
+          <li class="rounded-lg border border-slate-200 bg-slate-50 p-4"><strong class="block text-slate-950 mb-1">5. 환경 파일 저장</strong>`~/.config/gws/.env`에 인증 정보를 저장합니다.</li>
+          <li class="rounded-lg border border-slate-200 bg-slate-50 p-4"><strong class="block text-slate-950 mb-1">6. 최종 스코프 인증</strong>6개 서비스 스코프를 묶어 `gws auth login`을 실행합니다.</li>
+        </ol>
+      </div>
+
+      <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-slate-700">
+          <span class="text-sm font-bold text-slate-200">최종 인증 명령어</span>
+          <button type="button" onclick="copyCode(this)" class="text-xs font-bold text-slate-200 hover:text-white flex items-center gap-1">
+            <span class="default-state inline-flex items-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i>복사</span>
+            <span class="copied-state hidden items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i>완료</span>
+          </button>
+        </div>
+        <pre class="p-5 overflow-x-auto text-sm text-slate-100"><code>gws auth login -s drive,gmail,calendar,sheets,docs,forms</code></pre>
+      </div>
+    </section>
+
+    <section id="day3-auth" class="space-y-10">
+      <div>
+        <p class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700 mb-4">AUTH</p>
+        <h2 class="text-3xl font-extrabold text-slate-950 mb-4">인증 완료 확인</h2>
+        <p class="text-lg text-slate-600 max-w-3xl">Google에서 확인하지 않은 앱 경고가 나오면 고급 메뉴로 이동해 권한 체크박스를 모두 선택해야 인증이 완료됩니다.</p>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-3">
+        <div class="rounded-lg bg-white border border-slate-200 p-5 shadow-sm"><strong class="block text-blue-700 mb-1">1</strong><p class="text-sm text-slate-600">"Google에서 확인하지 않은 앱" 경고에서 고급을 클릭합니다.</p></div>
+        <div class="rounded-lg bg-white border border-slate-200 p-5 shadow-sm"><strong class="block text-blue-700 mb-1">2</strong><p class="text-sm text-slate-600">"gws CLI(으)로 이동(안전하지 않음)"을 클릭합니다.</p></div>
+        <div class="rounded-lg bg-white border border-slate-200 p-5 shadow-sm"><strong class="block text-blue-700 mb-1">3</strong><p class="text-sm text-slate-600">권한 체크박스를 모두 선택하고 계속을 눌러 인증을 완료합니다.</p></div>
+      </div>
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
+          <div class="px-4 py-3 border-b border-slate-700 text-sm font-bold text-slate-200">완료 확인</div>
+          <pre class="p-5 overflow-x-auto text-sm text-slate-100"><code>gws auth status</code></pre>
+        </div>
+        <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
+          <div class="px-4 py-3 border-b border-slate-700 text-sm font-bold text-slate-200">Drive 테스트</div>
+          <pre class="p-5 overflow-x-auto text-sm text-slate-100"><code>gws drive files list --params '{"pageSize":5}'</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section id="day3-skill" class="space-y-10">
+      <div>
+        <p class="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-700 mb-4">SKILL</p>
+        <h2 class="text-3xl font-extrabold text-slate-950 mb-4">GWS CLI Skill 문서화</h2>
+        <p class="text-lg text-slate-600 max-w-3xl">Claude가 사용법 문서를 Skill로 만들면, 수강생의 자연어 요청을 gws 핵심 명령 패턴으로 즉시 변환하고 실행할 수 있습니다.</p>
+      </div>
+
+      <div class="rounded-lg border border-amber-200 bg-amber-50 p-5">
+        <h3 class="font-bold text-amber-950 mb-2">Claude 요청</h3>
+        <p class="text-amber-900 font-semibold">"gws CLI 사용법 정리해서 gws_skill.md Skill 문서로 만들어줘. 인증 정보(CLIENT_ID 등)는 .env 파일 연결로, Skill만으로 바로 쓸 수 있게 구성해줘"</p>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        <article class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <h3 class="font-bold text-slate-950 mb-4">핵심 명령 패턴</h3>
+          <div class="space-y-3 text-sm">
+            <div class="rounded-lg bg-slate-900 p-4 text-slate-100 font-mono">gws drive files list --params '{"pageSize":5}'</div>
+            <div class="rounded-lg bg-slate-900 p-4 text-slate-100 font-mono">gws gmail messages list --params '{"q":"is:unread"}'</div>
+            <div class="rounded-lg bg-slate-900 p-4 text-slate-100 font-mono">gws calendar events list --calendarId primary</div>
+          </div>
+        </article>
+        <article class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <h3 class="font-bold text-slate-950 mb-4">자연어 요청 예시</h3>
+          <ul class="space-y-3 text-sm text-slate-700">
+            <li class="rounded-lg border border-slate-100 bg-slate-50 p-3">"내 드라이브 최근 파일 보여줘"</li>
+            <li class="rounded-lg border border-slate-100 bg-slate-50 p-3">"안 읽은 메일 목록 뽑아줘"</li>
+            <li class="rounded-lg border border-slate-100 bg-slate-50 p-3">"오늘 일정 알려줘"</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="day3-practices" class="space-y-10">
+      <div>
+        <p class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700 mb-4">PRACTICE</p>
+        <h2 class="text-3xl font-extrabold text-slate-950 mb-4">Google Workspace 실습 4종</h2>
+        <p class="text-lg text-slate-600 max-w-3xl">Drive, Gmail, Calendar, Sheets·Docs·Forms 작업을 Claude에게 자연어로 요청하고, 실제 Google 서비스 화면에서 결과를 확인합니다.</p>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        <article class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 text-blue-700"><i data-lucide="folder-up" class="w-5 h-5"></i></span>
+            <h3 class="font-bold text-slate-950">Drive 파일 조회 · 업로드 · 다운로드</h3>
+          </div>
+          <ol class="space-y-2 text-sm text-slate-600">
+            <li>1. "내 드라이브 최근 파일 5개 목록 보여줘"</li>
+            <li>2. "test.txt 파일 만들어서 드라이브에 업로드해줘"</li>
+            <li>3. "방금 업로드한 파일 다운로드해줘"</li>
+          </ol>
+          <p class="mt-4 rounded-lg bg-blue-50 border border-blue-100 p-3 text-sm font-semibold text-blue-900">"내 드라이브 최근 파일 5개 목록 보여주고, 텍스트 파일 하나 만들어서 업로드해줘"</p>
+        </article>
+
+        <article class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-red-100 text-red-700"><i data-lucide="mail" class="w-5 h-5"></i></span>
+            <h3 class="font-bold text-slate-950">Gmail 조회 · 보내기</h3>
+          </div>
+          <ol class="space-y-2 text-sm text-slate-600">
+            <li>1. "안 읽은 메일 3개 제목과 발신자 보여줘"</li>
+            <li>2. "[본인 이메일]로 테스트 메일 보내줘 — 제목: GWS 실습 완료"</li>
+            <li>3. Gmail에서 수신을 확인합니다.</li>
+          </ol>
+          <p class="mt-4 rounded-lg bg-red-50 border border-red-100 p-3 text-sm font-semibold text-red-900">"안 읽은 메일 3개 요약해주고, 나한테 실습 완료 메일 보내줘"</p>
+        </article>
+
+        <article class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700"><i data-lucide="calendar-plus" class="w-5 h-5"></i></span>
+            <h3 class="font-bold text-slate-950">캘린더 일정 조회 · 추가</h3>
+          </div>
+          <ol class="space-y-2 text-sm text-slate-600">
+            <li>1. "이번 주 일정 목록 보여줘"</li>
+            <li>2. "내일 오후 3시에 GWS 실습 완료 일정 추가해줘"</li>
+            <li>3. Google Calendar 웹에서 추가된 일정을 확인합니다.</li>
+          </ol>
+          <p class="mt-4 rounded-lg bg-emerald-50 border border-emerald-100 p-3 text-sm font-semibold text-emerald-900">"이번 주 일정 보여주고, 내일 오후 3시에 테스트 일정 하나 추가해줘"</p>
+        </article>
+
+        <article class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 text-amber-700"><i data-lucide="files" class="w-5 h-5"></i></span>
+            <h3 class="font-bold text-slate-950">Sheets · Docs · Forms 생성</h3>
+          </div>
+          <ol class="space-y-2 text-sm text-slate-600">
+            <li>1. "월별 매출 정리용 Google Sheets 만들어줘"</li>
+            <li>2. "회의록 Google Docs 문서 만들어줘 — 제목: 2026 AI 강의 회의록"</li>
+            <li>3. "만족도 조사 Google Forms 만들어줘 — 질문 3개"</li>
+          </ol>
+          <p class="mt-4 rounded-lg bg-amber-50 border border-amber-100 p-3 text-sm font-semibold text-amber-900">"구글 시트·닥스·폼 각 하나씩 만들어줘 (매출표 / 회의록 / 만족도 설문)"</p>
+        </article>
+      </div>
+    </section>
+    </div>
     <section id="content-day4" class="day-content hidden rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center">
       <p class="text-sm font-bold text-slate-400 mb-2">DAY 04</p>
       <h2 class="text-2xl font-extrabold text-slate-900">4일차 콘텐츠 준비중</h2>
@@ -1053,7 +1242,7 @@ for shape in slide.shapes:
     const days = [
       { id: 1, title: '1일차: 문서 자동화', icon: 'file-cog' },
       { id: 2, title: '2일차: 웹 자동화', icon: 'mouse-pointer-click' },
-      { id: 3, title: '3일차: 준비중', icon: 'lock' },
+      { id: 3, title: '3일차: GWS 자동화', icon: 'briefcase-business' },
       { id: 4, title: '4일차: 준비중', icon: 'lock' },
       { id: 5, title: '5일차: 준비중', icon: 'lock' },
       { id: 6, title: '6일차: 준비중', icon: 'lock' },
