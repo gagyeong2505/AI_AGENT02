@@ -892,10 +892,226 @@ for shape in slide.shapes:
       </div>
     </section>
     </div>
-    <section id="content-day4" class="day-content hidden rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center">
-      <p class="text-sm font-bold text-slate-400 mb-2">DAY 04</p>
-      <h2 class="text-2xl font-extrabold text-slate-900">4일차 콘텐츠 준비중</h2>
+    <div id="content-day4" class="day-content hidden space-y-12">
+    <section id="day4-overview" class="space-y-10">
+      <div class="text-center sm:text-left">
+        <p class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700 mb-4">ADV 04</p>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-950 mb-4">외부 API로 AI 기능 확장하기</h2>
+        <p class="text-lg text-slate-600 max-w-3xl leading-relaxed">API 키 발급부터 Skill 제작까지 연결해 Claude가 네이버 데이터랩, 타입캐스트 TTS, 공개 API를 직접 호출하는 자동화 흐름을 만듭니다.</p>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-4">
+        <article class="rounded-lg border border-blue-200 bg-blue-50 p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600 text-white"><i data-lucide="key-round" class="w-5 h-5"></i></span>
+            <h3 class="font-bold text-blue-950">API 키</h3>
+          </div>
+          <p class="text-sm leading-relaxed text-blue-900">회원가입, 개발자 콘솔, 키 생성, 복사라는 기본 흐름을 익혀 외부 서비스를 Claude와 연결합니다.</p>
+        </article>
+        <article class="rounded-lg border border-emerald-200 bg-emerald-50 p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-600 text-white"><i data-lucide="bar-chart-3" class="w-5 h-5"></i></span>
+            <h3 class="font-bold text-emerald-950">네이버 데이터랩</h3>
+          </div>
+          <p class="text-sm leading-relaxed text-emerald-900">검색어 트렌드와 쇼핑인사이트 API를 사용해 시장 조사와 마케팅 분석 Skill을 구성합니다.</p>
+        </article>
+        <article class="rounded-lg border border-amber-200 bg-amber-50 p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-500 text-white"><i data-lucide="volume-2" class="w-5 h-5"></i></span>
+            <h3 class="font-bold text-amber-950">타입캐스트</h3>
+          </div>
+          <p class="text-sm leading-relaxed text-amber-900">API 키와 voice_id를 준비해 텍스트를 AI 성우 음성 파일로 변환하는 TTS Skill을 만듭니다.</p>
+        </article>
+        <article class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-900 text-white"><i data-lucide="plug-zap" class="w-5 h-5"></i></span>
+            <h3 class="font-bold text-slate-950">공개 API</h3>
+          </div>
+          <p class="text-sm leading-relaxed text-slate-600">public-apis-4Kr에서 원하는 국내 API를 골라 문서 읽기, 키 발급, Skill 제작까지 직접 진행합니다.</p>
+        </article>
+      </div>
+
+      <div class="rounded-lg border border-slate-200 bg-slate-900 p-6 text-white shadow-sm">
+        <h3 class="text-lg font-bold mb-3">오늘의 목표</h3>
+        <p class="text-slate-200">카드 등록 없이 발급 가능한 API를 중심으로, 키와 문서를 Claude에게 제공해 CLI 또는 Python Skill로 외부 기능을 자동화합니다.</p>
+      </div>
     </section>
+
+    <section id="day4-api-key" class="space-y-10">
+      <div>
+        <p class="inline-flex items-center rounded-full bg-slate-900 px-3 py-1 text-xs font-bold text-white mb-4">KEY</p>
+        <h2 class="text-3xl font-extrabold text-slate-950 mb-4">API 키 발급, 두려워하지 마세요</h2>
+        <p class="text-lg text-slate-600 max-w-3xl">MCP 서버나 CLI가 없는 서비스도 API 키가 있으면 Claude가 `curl`로 직접 호출하거나 Python Skill로 감싸 자동화할 수 있습니다.</p>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        <article class="rounded-lg border border-red-200 bg-red-50 p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-red-600 text-white"><i data-lucide="alert-circle" class="w-5 h-5"></i></span>
+            <h3 class="font-bold text-red-950">현재 상황</h3>
+          </div>
+          <ul class="space-y-2 text-sm text-red-900">
+            <li>MCP 서버나 CLI 툴이 출시된 서비스는 아직 소수입니다.</li>
+            <li>대부분의 서비스는 여전히 API 키 방식만 제공합니다.</li>
+            <li>API 키가 없으면 외부 서비스 연결 자체가 불가능합니다.</li>
+          </ul>
+        </article>
+        <article class="rounded-lg border border-emerald-200 bg-emerald-50 p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-600 text-white"><i data-lucide="check-circle-2" class="w-5 h-5"></i></span>
+            <h3 class="font-bold text-emerald-950">API 키가 있으면</h3>
+          </div>
+          <ul class="space-y-2 text-sm text-emerald-900">
+            <li>Claude가 bash와 `curl`로 API를 직접 호출할 수 있습니다.</li>
+            <li>반복 호출은 Python Skill로 래핑해 자동화할 수 있습니다.</li>
+            <li>문서와 키만 있으면 어떤 서비스든 에이전트 기능으로 연결할 수 있습니다.</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="rounded-lg border border-blue-200 bg-blue-50 p-5">
+        <h3 class="font-bold text-blue-950 mb-2">기본 발급 흐름</h3>
+        <p class="text-blue-900 font-semibold">회원가입 → 개발자 콘솔 접속 → 키 생성 → 복사</p>
+        <p class="text-sm text-blue-700 mt-3">대부분 이 4단계입니다. 막히면 Claude에게 "이 서비스 API 키 발급 방법 알려줘"라고 요청해 화면별 절차를 확인합니다.</p>
+      </div>
+    </section>
+
+    <section id="day4-naver" class="space-y-10">
+      <div>
+        <p class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700 mb-4">NAVER</p>
+        <h2 class="text-3xl font-extrabold text-slate-950 mb-4">네이버 오픈 API와 데이터랩 Skill</h2>
+        <p class="text-lg text-slate-600 max-w-3xl">국내 검색, 번역, 지도, TTS 데이터를 무료 쿼터로 활용합니다. 이번 실습은 Client ID와 Secret만 필요한 비로그인 방식의 데이터랩 API를 사용합니다.</p>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        <article class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <h3 class="font-bold text-slate-950 mb-4">사용할 API</h3>
+          <div class="space-y-4 text-sm text-slate-700">
+            <div class="rounded-lg border border-emerald-100 bg-emerald-50 p-4">
+              <strong class="block text-emerald-950 mb-1">검색어 트렌드 API</strong>
+              기간별 검색어 트렌드를 최대 5개 키워드까지 비교해 시장 조사와 마케팅 분석에 활용합니다.
+            </div>
+            <div class="rounded-lg border border-blue-100 bg-blue-50 p-4">
+              <strong class="block text-blue-950 mb-1">쇼핑인사이트 API</strong>
+              쇼핑 카테고리별 클릭 트렌드를 분석해 제품과 카테고리 수요를 확인합니다.
+            </div>
+          </div>
+        </article>
+        <article class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <h3 class="font-bold text-slate-950 mb-4">앱 등록 순서</h3>
+          <ol class="space-y-3 text-sm text-slate-700">
+            <li><strong class="text-emerald-700">1.</strong> `developers.naver.com/apps/#/list` 접속 후 애플리케이션 등록을 클릭합니다.</li>
+            <li><strong class="text-emerald-700">2.</strong> 애플리케이션 이름을 입력합니다. 예: `naver-datalab-skill`</li>
+            <li><strong class="text-emerald-700">3.</strong> 데이터랩(검색어트렌드)과 데이터랩(쇼핑인사이트)을 체크합니다.</li>
+            <li><strong class="text-emerald-700">4.</strong> 환경은 Web, URL은 `http://localhost:3000`으로 추가합니다.</li>
+            <li><strong class="text-emerald-700">5.</strong> 등록 완료 후 Client ID와 Client Secret을 복사합니다.</li>
+          </ol>
+        </article>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
+          <div class="px-4 py-3 border-b border-slate-700 text-sm font-bold text-slate-200">키 보관 예시</div>
+          <pre class="p-5 overflow-x-auto text-sm text-slate-100"><code>NAVER_CLIENT_ID=발급받은_클라이언트_ID
+NAVER_CLIENT_SECRET=발급받은_시크릿</code></pre>
+        </div>
+        <div class="rounded-lg border border-amber-200 bg-amber-50 p-5">
+          <h3 class="font-bold text-amber-950 mb-2">Claude 요청</h3>
+          <p class="text-amber-900 font-semibold">"아래 네이버 데이터랩 API 문서를 curl로 읽고, ID/Secret으로 CLI Skill 만들어줘"</p>
+          <p class="text-sm text-amber-700 mt-3">문서: `developers.naver.com/docs/serviceapi/datalab/search/search.md`</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="day4-typecast" class="space-y-10">
+      <div>
+        <p class="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-700 mb-4">TYPECAST</p>
+        <h2 class="text-3xl font-extrabold text-slate-950 mb-4">타입캐스트 AI 음성 합성 API</h2>
+        <p class="text-lg text-slate-600 max-w-3xl">타입캐스트는 한국어에 강한 AI 성우 플랫폼입니다. API 키와 voice_id를 준비하면 텍스트를 MP3 음성 파일로 자동 변환할 수 있습니다.</p>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-3">
+        <article class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-900 text-white"><i data-lucide="badge-info" class="w-5 h-5"></i></span>
+            <h3 class="font-bold text-slate-950">활용 시나리오</h3>
+          </div>
+          <ul class="space-y-2 text-sm text-slate-600">
+            <li>뉴스 요약 텍스트를 음성 파일로 자동 생성</li>
+            <li>블로그 글을 MP3 오디오로 변환</li>
+            <li>카드뉴스 내레이션 자동 제작</li>
+          </ul>
+        </article>
+        <article class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600 text-white"><i data-lucide="key-round" class="w-5 h-5"></i></span>
+            <h3 class="font-bold text-slate-950">API 키 발급</h3>
+          </div>
+          <ol class="space-y-2 text-sm text-slate-600">
+            <li>1. `typecast.ai/developers/api` 접속 후 구글 계정으로 로그인합니다.</li>
+            <li>2. API 키 탭으로 이동해 키 생성 버튼을 클릭합니다.</li>
+            <li>3. 생성된 API 키를 복사해 Claude에게 제공할 준비를 합니다.</li>
+          </ol>
+        </article>
+        <article class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-500 text-white"><i data-lucide="audio-lines" class="w-5 h-5"></i></span>
+            <h3 class="font-bold text-slate-950">voice_id 복사</h3>
+          </div>
+          <ol class="space-y-2 text-sm text-slate-600">
+            <li>1. 타입캐스트 캐릭터 목록 페이지에 접속합니다.</li>
+            <li>2. 원하는 캐릭터를 클릭해 미리 듣기로 목소리를 확인합니다.</li>
+            <li>3. URL 또는 개발자 도구에서 `voice_id` 값을 복사합니다.</li>
+          </ol>
+        </article>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
+          <div class="px-4 py-3 border-b border-slate-700 text-sm font-bold text-slate-200">voice_id 확인 예시</div>
+          <pre class="p-5 overflow-x-auto text-sm text-slate-100"><code>캐릭터 URL: typecast.ai/voices/[voice_id]
+예시: 5f3b2e1d0a7c4f8b9e2d1a3c</code></pre>
+        </div>
+        <div class="rounded-lg border border-amber-200 bg-amber-50 p-5">
+          <h3 class="font-bold text-amber-950 mb-2">Claude 요청</h3>
+          <p class="text-amber-900 font-semibold">"typecast.ai/docs/overview 읽고, API키와 voice_id로 TTS CLI Skill 만들어줘"</p>
+          <p class="text-sm text-amber-700 mt-3">문서, API 키, voice_id를 함께 제공한 뒤 실행 테스트까지 요청합니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="day4-practice" class="space-y-10">
+      <div>
+        <p class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700 mb-4">PRACTICE</p>
+        <h2 class="text-3xl font-extrabold text-slate-950 mb-4">공개 API 직접 연결 실습</h2>
+        <p class="text-lg text-slate-600 max-w-3xl">public-apis-4Kr에서 국내 서비스 중심의 공개 API 목록을 확인하고, 원하는 API를 직접 골라 나만의 Skill로 연결합니다.</p>
+      </div>
+
+      <div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+        <h3 class="font-bold text-slate-950 mb-4">실습 순서</h3>
+        <ol class="grid gap-3 md:grid-cols-3 text-sm">
+          <li class="rounded-lg border border-slate-200 bg-slate-50 p-4"><strong class="block text-blue-700 mb-1">1. API 선택</strong>`github.com/yybmion/public-apis-4Kr`에서 써보고 싶은 API를 하나 고릅니다.</li>
+          <li class="rounded-lg border border-slate-200 bg-slate-50 p-4"><strong class="block text-blue-700 mb-1">2. 키 발급</strong>"[선택한 API] 키 발급 방법 알려줘"라고 요청해 키를 준비합니다.</li>
+          <li class="rounded-lg border border-slate-200 bg-slate-50 p-4"><strong class="block text-blue-700 mb-1">3. Skill 제작</strong>"[API URL] 읽고 CLI Skill 만들어줘"라고 요청해 Claude가 자동 제작하게 합니다.</li>
+        </ol>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        <article class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <h3 class="font-bold text-slate-950 mb-4">완성 확인 체크리스트</h3>
+          <ul class="space-y-3 text-sm text-slate-700">
+            <li class="rounded-lg border border-slate-100 bg-slate-50 p-3">API 문서 URL과 인증 방식이 Skill 문서에 정리되어 있습니다.</li>
+            <li class="rounded-lg border border-slate-100 bg-slate-50 p-3">키는 `.env` 또는 실행 시 입력 방식으로 분리되어 있습니다.</li>
+            <li class="rounded-lg border border-slate-100 bg-slate-50 p-3">샘플 요청을 실행해 정상 응답을 확인했습니다.</li>
+          </ul>
+        </article>
+        <article class="rounded-lg border border-emerald-200 bg-emerald-50 p-6 shadow-sm">
+          <h3 class="font-bold text-emerald-950 mb-4">최종 프롬프트</h3>
+          <p class="text-sm leading-relaxed text-emerald-900 font-semibold">"이 API 문서를 읽고, 내 API 키를 환경변수로 받아서 실행하는 CLI Skill을 만들어줘. 사용 예시와 테스트 명령어까지 포함해줘."</p>
+        </article>
+      </div>
+    </section>
+    </div>
     <section id="content-day5" class="day-content hidden rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center">
       <p class="text-sm font-bold text-slate-400 mb-2">DAY 05</p>
       <h2 class="text-2xl font-extrabold text-slate-900">5일차 콘텐츠 준비중</h2>
@@ -1243,7 +1459,7 @@ for shape in slide.shapes:
       { id: 1, title: '1일차: 문서 자동화', icon: 'file-cog' },
       { id: 2, title: '2일차: 웹 자동화', icon: 'mouse-pointer-click' },
       { id: 3, title: '3일차: GWS 자동화', icon: 'briefcase-business' },
-      { id: 4, title: '4일차: 준비중', icon: 'lock' },
+      { id: 4, title: '4일차: 외부 API', icon: 'plug-zap' },
       { id: 5, title: '5일차: 준비중', icon: 'lock' },
       { id: 6, title: '6일차: 준비중', icon: 'lock' },
       { id: 7, title: '7일차: 준비중', icon: 'lock' },
