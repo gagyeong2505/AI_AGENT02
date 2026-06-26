@@ -1840,10 +1840,251 @@ task 유형별 실행 스킬:
       </div>
     </section>
     </div>
-    <section id="content-day8" class="day-content hidden rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center">
-      <p class="text-sm font-bold text-slate-400 mb-2">DAY 08</p>
-      <h2 class="text-2xl font-extrabold text-slate-900">8일차 콘텐츠 준비중</h2>
+    <div id="content-day8" class="day-content hidden space-y-12">
+    <section id="day8-overview" class="space-y-10">
+      <div class="text-center sm:text-left">
+        <p class="inline-flex items-center rounded-full bg-slate-900 px-3 py-1 text-xs font-bold text-white mb-4">ADV 08</p>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-950 mb-4">멀티 에이전트 오케스트레이션</h2>
+        <p class="text-lg text-slate-600 max-w-3xl leading-relaxed">Step5 Notion DB, Step6 SKILL.md, Step7 PM 에이전트를 하나로 합쳐 회의록 하나에서 여러 담당자의 산출물이 동시에 만들어지는 캡스톤 프로젝트를 완성합니다.</p>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        <article class="rounded-lg border border-red-200 bg-red-50 p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-red-600 text-white"><i data-lucide="user-round" class="w-5 h-5"></i></span>
+            <h3 class="font-bold text-red-950">기존 방식</h3>
+          </div>
+          <ul class="space-y-2 text-sm text-red-900">
+            <li>마케팅안, 개발 일정, 디자인 시안, 보고서를 각각 지시합니다.</li>
+            <li>사람이 담당자별 작업을 나누고 순서를 관리해야 합니다.</li>
+            <li>동시에 실행하기 어렵고 결과 링크도 따로 모아야 합니다.</li>
+          </ul>
+        </article>
+        <article class="rounded-lg border border-emerald-200 bg-emerald-50 p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-600 text-white"><i data-lucide="network" class="w-5 h-5"></i></span>
+            <h3 class="font-bold text-emerald-950">오케스트레이션 방식</h3>
+          </div>
+          <ul class="space-y-2 text-sm text-emerald-900">
+            <li>PM이 회의록을 분석해 Notion Work DB에 task를 등록합니다.</li>
+            <li>담당자 에이전트가 각자 폴링으로 내 task를 감지합니다.</li>
+            <li>5명이 동시에 스킬을 실행하고 결과를 Notion에 다시 저장합니다.</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="rounded-lg border border-blue-200 bg-blue-50 p-6 shadow-sm">
+        <h3 class="font-bold text-blue-950 mb-4">오늘 목표</h3>
+        <div class="grid gap-3 md:grid-cols-3 text-sm">
+          <div class="rounded-lg border border-blue-100 bg-white p-4"><strong class="block text-blue-950 mb-1">01. 구조 이해</strong>PM + 담당자 5명의 멀티 에이전트 흐름을 이해합니다.</div>
+          <div class="rounded-lg border border-blue-100 bg-white p-4"><strong class="block text-blue-950 mb-1">02. 시연 관찰</strong>VSCode 6분할 터미널에서 동시에 실행되는 장면을 확인합니다.</div>
+          <div class="rounded-lg border border-blue-100 bg-white p-4"><strong class="block text-blue-950 mb-1">03. 직접 실습</strong>Notion 세팅, 폴링 실행, 결과 확인까지 직접 진행합니다.</div>
+        </div>
+      </div>
     </section>
+
+    <section id="day8-architecture" class="space-y-10">
+      <div>
+        <p class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700 mb-4">ARCHITECTURE</p>
+        <h2 class="text-3xl font-extrabold text-slate-950 mb-4">PM이 지휘하고 담당자들이 각자 실행합니다</h2>
+        <p class="text-lg text-slate-600 max-w-3xl">PM은 Google Docs 회의록을 읽어 action item을 만들고, 담당자별 Claude는 Notion DB를 10초마다 확인하다가 내 task를 발견하면 독립적으로 실행합니다.</p>
+      </div>
+
+      <div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+        <h3 class="font-bold text-slate-950 mb-4">실행 폴더 구조</h3>
+        <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
+          <pre class="p-5 overflow-x-auto text-sm text-slate-100"><code>리허설_공유용/
+├── PM/.claude/                 # CLAUDE.md + skills, Step7 PM 에이전트
+├── 박부장/.claude/skills/       # naver-search-trend, gmail
+├── 이과장/.claude/skills/       # gmail, sheets
+├── 정대리/.claude/skills/       # sheets, gmail
+├── 최주임/.claude/skills/       # stability-image-gen, drive
+├── 김대표/.claude/skills/       # slides
+└── _공용/notion_poller.py       # 10초 폴링, task 감지, 상태 업데이트</code></pre>
+        </div>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-3">
+        <article class="rounded-lg border border-blue-200 bg-blue-50 p-6 shadow-sm">
+          <h3 class="font-bold text-blue-950 mb-3">Step5: Notion DB</h3>
+          <p class="text-sm text-blue-900">task 저장소입니다. 담당자, 유형, 상태, 마감일, 메모 링크를 한곳에서 관리합니다.</p>
+        </article>
+        <article class="rounded-lg border border-amber-200 bg-amber-50 p-6 shadow-sm">
+          <h3 class="font-bold text-amber-950 mb-3">Step6: SKILL.md</h3>
+          <p class="text-sm text-amber-900">담당자별 실행 능력입니다. 검색, Gmail, Sheets, Slides, Drive, 이미지 생성 스킬을 연결합니다.</p>
+        </article>
+        <article class="rounded-lg border border-emerald-200 bg-emerald-50 p-6 shadow-sm">
+          <h3 class="font-bold text-emerald-950 mb-3">Step7: PM 에이전트</h3>
+          <p class="text-sm text-emerald-900">지휘자입니다. 회의록을 분석해 담당자별 task로 분해하고 Work DB에 등록합니다.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="day8-polling" class="space-y-10">
+      <div>
+        <p class="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-700 mb-4">POLLING</p>
+        <h2 class="text-3xl font-extrabold text-slate-950 mb-4">폴링은 새 할 일을 기다리는 방식입니다</h2>
+        <p class="text-lg text-slate-600 max-w-3xl">담당자 에이전트가 10초마다 Notion을 확인합니다. 내 이름이고 상태가 시작 전인 task를 발견하면 상태를 진행 중으로 바꾸고 실행합니다.</p>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        <article class="rounded-lg border border-amber-200 bg-amber-50 p-6 shadow-sm">
+          <h3 class="font-bold text-amber-950 mb-4">일상 비유</h3>
+          <ul class="space-y-3 text-sm text-amber-900">
+            <li class="rounded-lg border border-amber-100 bg-white p-3">10초마다 메모판을 확인합니다.</li>
+            <li class="rounded-lg border border-amber-100 bg-white p-3">새 메모가 없으면 다시 10초 대기합니다.</li>
+            <li class="rounded-lg border border-amber-100 bg-white p-3">내 업무 메모를 발견하면 즉시 처리합니다.</li>
+          </ul>
+        </article>
+        <article class="rounded-lg border border-blue-200 bg-blue-50 p-6 shadow-sm">
+          <h3 class="font-bold text-blue-950 mb-4">실제 동작</h3>
+          <ol class="space-y-3 text-sm text-blue-900">
+            <li><strong class="text-blue-700">1.</strong> `notion_poller.py` 실행 후 10초 대기</li>
+            <li><strong class="text-blue-700">2.</strong> Notion DB에서 내 이름 + 시작 전 task 조회</li>
+            <li><strong class="text-blue-700">3.</strong> 새 task 발견 시 Status를 진행 중으로 변경</li>
+            <li><strong class="text-blue-700">4.</strong> 스킬 호출, 산출물 생성, Status 완료 처리</li>
+            <li><strong class="text-blue-700">5.</strong> 다시 대기 상태로 돌아가 반복</li>
+          </ol>
+        </article>
+      </div>
+    </section>
+
+    <section id="day8-scenario" class="space-y-10">
+      <div>
+        <p class="inline-flex items-center rounded-full bg-purple-100 px-3 py-1 text-xs font-bold text-purple-700 mb-4">DEMO</p>
+        <h2 class="text-3xl font-extrabold text-slate-950 mb-4">시연 시나리오: 신상품 기획회의</h2>
+        <p class="text-lg text-slate-600 max-w-3xl">회의록 링크 하나를 PM에게 전달하면 PM이 action item을 나누고 5명의 담당자 에이전트가 동시에 산출물을 생성합니다.</p>
+      </div>
+
+      <div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+        <h3 class="font-bold text-slate-950 mb-4">회의록에서 산출물까지</h3>
+        <div class="grid gap-3 md:grid-cols-5 text-sm">
+          <div class="rounded-lg border border-slate-200 bg-slate-50 p-4"><strong class="block text-slate-950 mb-1">INPUT</strong>Google Docs 회의록, 날것 메모, 음성 변환본</div>
+          <div class="rounded-lg border border-blue-100 bg-blue-50 p-4"><strong class="block text-blue-950 mb-1">PM</strong>회의록 분석, 액션아이템 추출, 담당자 분류</div>
+          <div class="rounded-lg border border-amber-100 bg-amber-50 p-4"><strong class="block text-amber-950 mb-1">Notion</strong>Work DB에 담당자별 task 5개 등록</div>
+          <div class="rounded-lg border border-purple-100 bg-purple-50 p-4"><strong class="block text-purple-950 mb-1">담당자</strong>폴링 감지 후 각자 스킬 실행</div>
+          <div class="rounded-lg border border-emerald-100 bg-emerald-50 p-4"><strong class="block text-emerald-950 mb-1">RESULT</strong>산출물 링크와 완료 상태 저장</div>
+        </div>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <article class="rounded-lg border border-amber-200 bg-amber-50 p-6 shadow-sm">
+          <h3 class="font-bold text-amber-950 mb-3">박부장: 마케팅</h3>
+          <p class="text-sm text-amber-900">시장조사와 경쟁사 분석을 수행하고 결과를 Google Sheets로 정리합니다.</p>
+        </article>
+        <article class="rounded-lg border border-blue-200 bg-blue-50 p-6 shadow-sm">
+          <h3 class="font-bold text-blue-950 mb-3">이과장: 마케팅 운영</h3>
+          <p class="text-sm text-blue-900">인플루언서 리스트와 예산안을 만들고 Gmail 또는 Sheets로 산출합니다.</p>
+        </article>
+        <article class="rounded-lg border border-emerald-200 bg-emerald-50 p-6 shadow-sm">
+          <h3 class="font-bold text-emerald-950 mb-3">정대리: 개발</h3>
+          <p class="text-sm text-emerald-900">개발 일정표와 외주 컨택 이메일을 생성합니다.</p>
+        </article>
+        <article class="rounded-lg border border-purple-200 bg-purple-50 p-6 shadow-sm">
+          <h3 class="font-bold text-purple-950 mb-3">최주임: 디자인</h3>
+          <p class="text-sm text-purple-900">AI 이미지 시안을 생성하고 Drive에 저장합니다.</p>
+        </article>
+        <article class="rounded-lg border border-slate-200 bg-slate-50 p-6 shadow-sm lg:col-span-2">
+          <h3 class="font-bold text-slate-950 mb-3">김대표: 경영</h3>
+          <p class="text-sm text-slate-700">이사회 보고서와 발표자료를 Slides로 정리합니다.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="day8-image-skill" class="space-y-10">
+      <div>
+        <p class="inline-flex items-center rounded-full bg-violet-100 px-3 py-1 text-xs font-bold text-violet-700 mb-4">SKILL ADD-ON</p>
+        <h2 class="text-3xl font-extrabold text-slate-950 mb-4">AI 이미지 생성 스킬을 추가합니다</h2>
+        <p class="text-lg text-slate-600 max-w-3xl">Stability AI API를 하네스에 연결해 회의록의 제품 컨셉 키워드에서 디자인 시안 PNG까지 자동 생성합니다.</p>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        <article class="rounded-lg border border-violet-200 bg-violet-50 p-6 shadow-sm">
+          <h3 class="font-bold text-violet-950 mb-4">API 키 준비</h3>
+          <ol class="space-y-3 text-sm text-violet-900">
+            <li><strong class="text-violet-700">1.</strong> `platform.stability.ai` 접속 후 회원가입</li>
+            <li><strong class="text-violet-700">2.</strong> Dashboard → API Keys → Create Key</li>
+            <li><strong class="text-violet-700">3.</strong> `.env`에 `STABILITY_API_KEY=sk-xxx` 저장</li>
+          </ol>
+        </article>
+        <article class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <h3 class="font-bold text-slate-950 mb-4">Claude에게 요청할 내용</h3>
+          <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
+            <pre class="p-5 overflow-x-auto text-sm text-slate-100 whitespace-pre-wrap"><code>stability.ai API로 이미지 생성 스킬 만들어줘.
+모델: sd3.5-flash
+API 키: .env의 STABILITY_API_KEY
+입력: 이미지 설명 텍스트, 한영 자동 번역 포함
+출력: output/ 폴더에 PNG 저장
+명령어: /image-gen [이미지 설명]
+생성 파일: SKILL.md + generate.py</code></pre>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="day8-practice" class="space-y-10">
+      <div>
+        <p class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700 mb-4">PRACTICE</p>
+        <h2 class="text-3xl font-extrabold text-slate-950 mb-4">실습 로드맵 7단계</h2>
+        <p class="text-lg text-slate-600 max-w-3xl">이 순서대로 진행하면 Notion DB 상태 변화와 outputs 폴더 산출물을 통해 멀티 에이전트가 동작하는 것을 확인할 수 있습니다.</p>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div class="rounded-lg border border-slate-200 bg-white p-5 shadow-sm"><strong class="block text-blue-700 mb-2">1. Notion 템플릿 복제</strong><p class="text-sm text-slate-600">템플릿을 복제하고 Integration을 연결합니다.</p></div>
+        <div class="rounded-lg border border-slate-200 bg-white p-5 shadow-sm"><strong class="block text-blue-700 mb-2">2. .env 파일 설정</strong><p class="text-sm text-slate-600">NOTION_TOKEN, REHEARSAL_DB_ID, STABILITY_API_KEY를 입력합니다.</p></div>
+        <div class="rounded-lg border border-slate-200 bg-white p-5 shadow-sm"><strong class="block text-blue-700 mb-2">3. 터미널 6개 실행</strong><p class="text-sm text-slate-600">PM과 담당자 5명 폴더에서 각각 Claude를 실행합니다.</p></div>
+        <div class="rounded-lg border border-slate-200 bg-white p-5 shadow-sm"><strong class="block text-blue-700 mb-2">4. 폴링 시작</strong><p class="text-sm text-slate-600">담당자 5명 터미널에 `폴링 시작`을 입력합니다.</p></div>
+        <div class="rounded-lg border border-slate-200 bg-white p-5 shadow-sm"><strong class="block text-blue-700 mb-2">5. 회의록 투입</strong><p class="text-sm text-slate-600">PM 터미널에 Google Docs 링크를 전달합니다.</p></div>
+        <div class="rounded-lg border border-slate-200 bg-white p-5 shadow-sm"><strong class="block text-blue-700 mb-2">6. 자동 처리 관찰</strong><p class="text-sm text-slate-600">상태가 시작 전, 진행 중, 완료로 바뀌는지 봅니다.</p></div>
+        <div class="rounded-lg border border-slate-200 bg-white p-5 shadow-sm"><strong class="block text-blue-700 mb-2">7. 결과 확인</strong><p class="text-sm text-slate-600">Notion 메모 링크와 outputs 폴더 산출물을 확인합니다.</p></div>
+        <div class="rounded-lg border border-emerald-200 bg-emerald-50 p-5 shadow-sm"><strong class="block text-emerald-700 mb-2">완성 기준</strong><p class="text-sm text-emerald-900">약 5분 안에 5개 산출물이 생성되고 Notion 상태가 모두 완료가 됩니다.</p></div>
+      </div>
+
+      <div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+        <h3 class="font-bold text-slate-950 mb-4">세팅 체크리스트</h3>
+        <div class="grid gap-3 md:grid-cols-4 text-sm">
+          <label class="rounded-lg border border-slate-200 bg-slate-50 p-4"><input type="checkbox" class="mr-2">Notion DB 복제</label>
+          <label class="rounded-lg border border-slate-200 bg-slate-50 p-4"><input type="checkbox" class="mr-2">`.env` 3줄 입력</label>
+          <label class="rounded-lg border border-slate-200 bg-slate-50 p-4"><input type="checkbox" class="mr-2">터미널 6개 준비</label>
+          <label class="rounded-lg border border-slate-200 bg-slate-50 p-4"><input type="checkbox" class="mr-2">담당자 폴링 대기</label>
+        </div>
+      </div>
+    </section>
+
+    <section id="day8-wrapup" class="space-y-10">
+      <div>
+        <p class="inline-flex items-center rounded-full bg-slate-900 px-3 py-1 text-xs font-bold text-white mb-4">WRAP-UP</p>
+        <h2 class="text-3xl font-extrabold text-slate-950 mb-4">결과 공유와 심화 과정 수료</h2>
+        <p class="text-lg text-slate-600 max-w-3xl">각자 만든 하네스를 시연하고, 어떤 Context와 Logic을 설계했는지 공유합니다.</p>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        <article class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <h3 class="font-bold text-slate-950 mb-4">결과 공유 방식</h3>
+          <ol class="space-y-3 text-sm text-slate-700">
+            <li><strong class="text-blue-700">1.</strong> 내 시나리오를 한 줄로 설명합니다.</li>
+            <li><strong class="text-blue-700">2.</strong> CLAUDE.md 핵심 규칙을 공개합니다.</li>
+            <li><strong class="text-blue-700">3.</strong> 명령 입력부터 자동 처리까지 실제 테스트를 시연합니다.</li>
+            <li><strong class="text-blue-700">4.</strong> 서로 개선 아이디어를 제안합니다.</li>
+          </ol>
+        </article>
+        <article class="rounded-lg border border-blue-200 bg-blue-50 p-6 shadow-sm">
+          <h3 class="font-bold text-blue-950 mb-4">심화 과정에서 배운 것</h3>
+          <ul class="space-y-3 text-sm text-blue-900">
+            <li>Step 5: Notion DB 기억 저장소 구축</li>
+            <li>Step 6: 세컨드 브레인 자동 분류</li>
+            <li>Step 7: PM 에이전트 + Status 추적</li>
+            <li class="font-bold text-blue-700">Step 8: 나만의 하네스 직접 설계</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="rounded-lg border border-blue-200 bg-blue-600 p-6 text-center text-white shadow-sm">
+        <p class="text-lg font-bold">Harness Engineering - Log to Logic 완성</p>
+        <p class="mt-2 text-sm text-blue-100">도구를 쓰는 사람에서 도구를 설계하는 사람으로 전환합니다.</p>
+      </div>
+    </section>
+    </div>
   </main>
 
   <div id="auth-modal" class="fixed inset-0 z-[200] hidden items-center justify-center bg-black/50 backdrop-blur-sm p-4">
@@ -2179,7 +2420,7 @@ task 유형별 실행 스킬:
       { id: 5, title: '5일차: Notion DB', icon: 'database' },
       { id: 6, title: '6일차: 세컨드 브레인', icon: 'brain-circuit' },
       { id: 7, title: '7일차: PM 에이전트', icon: 'bot' },
-      { id: 8, title: '8일차: 준비중', icon: 'lock' }
+      { id: 8, title: '8일차: 오케스트레이션', icon: 'network' }
     ];
     let currentDay = 1;
     let isInstructorMode = false;
