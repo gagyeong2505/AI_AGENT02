@@ -1353,10 +1353,222 @@ Python 스킬을 만들어줘.</code></pre>
       </div>
     </section>
     </div>
-    <section id="content-day6" class="day-content hidden rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center">
-      <p class="text-sm font-bold text-slate-400 mb-2">DAY 06</p>
-      <h2 class="text-2xl font-extrabold text-slate-900">6일차 콘텐츠 준비중</h2>
+    <div id="content-day6" class="day-content hidden space-y-12">
+    <section id="day6-overview" class="space-y-10">
+      <div class="text-center sm:text-left">
+        <p class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700 mb-4">ADV 06</p>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-950 mb-4">세컨드 브레인 자동 분류 저장</h2>
+        <p class="text-lg text-slate-600 max-w-3xl leading-relaxed">터미널에 남긴 한 줄 메모를 Claude가 트리거 키워드로 분류하고, Notion DB 4종에 자동 저장하는 시스템을 구축합니다.</p>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        <article class="rounded-lg border border-red-200 bg-red-50 p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-red-600 text-white"><i data-lucide="workflow" class="w-5 h-5"></i></span>
+            <h3 class="font-bold text-red-950">기존 기록 방식</h3>
+          </div>
+          <ul class="space-y-2 text-sm text-red-900">
+            <li>노트앱, 메모앱, 할일앱이 각각 따로 흩어집니다.</li>
+            <li>배운 내용, 할일, 아이디어를 다시 찾기 어렵습니다.</li>
+            <li>기억이 파편화되어 자동화의 입력값으로 쓰기 어렵습니다.</li>
+          </ul>
+        </article>
+        <article class="rounded-lg border border-emerald-200 bg-emerald-50 p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-600 text-white"><i data-lucide="brain-circuit" class="w-5 h-5"></i></span>
+            <h3 class="font-bold text-emerald-950">이번 수업의 방식</h3>
+          </div>
+          <ul class="space-y-2 text-sm text-emerald-900">
+            <li>터미널에서 자연어로 한 줄만 입력합니다.</li>
+            <li>Claude가 키워드를 감지해 저장 위치를 결정합니다.</li>
+            <li>Notion DB에 모이고, 이후 자동화와 검색에 바로 연결됩니다.</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="rounded-lg border border-slate-200 bg-slate-900 p-6 text-white shadow-sm">
+        <h3 class="text-lg font-bold mb-3">오늘의 완성 목표</h3>
+        <p class="text-slate-200">`개인:`, `업무:`, `학교:`, `메모:`, `배움:` 같은 트리거 키워드를 입력하면 Claude가 분류 규칙을 읽고 알맞은 Notion 저장 스킬을 실행하는 세컨드 브레인 흐름을 만듭니다.</p>
+      </div>
     </section>
+
+    <section id="day6-triggers" class="space-y-10">
+      <div>
+        <p class="inline-flex items-center rounded-full bg-slate-900 px-3 py-1 text-xs font-bold text-white mb-4">TRIGGERS</p>
+        <h2 class="text-3xl font-extrabold text-slate-950 mb-4">4가지 메모 종류와 트리거 키워드</h2>
+        <p class="text-lg text-slate-600 max-w-3xl">앞에 붙는 키워드 하나만으로 Claude가 저장할 DB와 실행할 스킬을 선택합니다.</p>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        <article class="rounded-lg border border-blue-200 bg-blue-50 p-6 shadow-sm">
+          <h3 class="font-bold text-blue-950 mb-4">개인: → Personal Tasks DB</h3>
+          <div class="space-y-2 text-sm text-blue-900">
+            <p class="rounded-lg bg-white border border-blue-100 p-3 font-mono">개인: 주말에 운동화 사기</p>
+            <p class="rounded-lg bg-white border border-blue-100 p-3 font-mono">개인: 부모님 생신 선물 알아보기</p>
+          </div>
+          <p class="mt-4 text-sm text-blue-800">집안일, 약속, 개인 목표를 저장합니다.</p>
+        </article>
+        <article class="rounded-lg border border-amber-200 bg-amber-50 p-6 shadow-sm">
+          <h3 class="font-bold text-amber-950 mb-4">업무: / 학교: → Work Tasks DB</h3>
+          <div class="space-y-2 text-sm text-amber-900">
+            <p class="rounded-lg bg-white border border-amber-100 p-3 font-mono">업무: 내일까지 기획서 제출</p>
+            <p class="rounded-lg bg-white border border-amber-100 p-3 font-mono">학교: 목요일 과제 제출 마감</p>
+          </div>
+          <p class="mt-4 text-sm text-amber-800">두 키워드는 같은 DB에 저장하고 Tag로 구분합니다.</p>
+        </article>
+        <article class="rounded-lg border border-emerald-200 bg-emerald-50 p-6 shadow-sm">
+          <h3 class="font-bold text-emerald-950 mb-4">메모: → Notes DB</h3>
+          <div class="space-y-2 text-sm text-emerald-900">
+            <p class="rounded-lg bg-white border border-emerald-100 p-3 font-mono">메모: 다음 강의 아이디어 - 자동화 시나리오</p>
+            <p class="rounded-lg bg-white border border-emerald-100 p-3 font-mono">메모: 오늘 식당 이름 기억해두기</p>
+          </div>
+          <p class="mt-4 text-sm text-emerald-800">일반 기록, 아이디어, 나중에 볼 것을 저장합니다.</p>
+        </article>
+        <article class="rounded-lg border border-purple-200 bg-purple-50 p-6 shadow-sm">
+          <h3 class="font-bold text-purple-950 mb-4">배움: → Docs DB</h3>
+          <div class="space-y-2 text-sm text-purple-900">
+            <p class="rounded-lg bg-white border border-purple-100 p-3 font-mono">배움: claude -p 는 headless 모드로 동작</p>
+            <p class="rounded-lg bg-white border border-purple-100 p-3 font-mono">배움: Notion API는 필터 쿼리가 자유롭다</p>
+          </div>
+          <p class="mt-4 text-sm text-purple-800">오늘 배운 것, 인사이트, 정리 내용을 축적합니다.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="day6-schema" class="space-y-10">
+      <div>
+        <p class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700 mb-4">SCHEMA</p>
+        <h2 class="text-3xl font-extrabold text-slate-950 mb-4">스키마를 먼저 정해야 자동 저장이 안정적입니다</h2>
+        <p class="text-lg text-slate-600 max-w-3xl">스키마는 DB의 컬럼 구조입니다. 어떤 정보를 어떤 속성에 저장할지 정해야 필터, 정렬, 자동화가 가능합니다.</p>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-3">
+        <article class="rounded-lg border border-red-200 bg-red-50 p-6 shadow-sm">
+          <h3 class="font-bold text-red-950 mb-3">스키마 없이 저장하면</h3>
+          <p class="text-sm leading-relaxed text-red-900">데이터가 제각각 들어가서 나중에 검색, 정렬, 자동화 연결이 어려워집니다.</p>
+        </article>
+        <article class="rounded-lg border border-emerald-200 bg-emerald-50 p-6 shadow-sm">
+          <h3 class="font-bold text-emerald-950 mb-3">스키마 정의 후 저장하면</h3>
+          <p class="text-sm leading-relaxed text-emerald-900">구조화된 데이터로 쌓여 Status, Date, Priority 같은 조건을 기준으로 자동 처리할 수 있습니다.</p>
+        </article>
+        <article class="rounded-lg border border-blue-200 bg-blue-50 p-6 shadow-sm">
+          <h3 class="font-bold text-blue-950 mb-3">Claude에게 스키마를 주면</h3>
+          <p class="text-sm leading-relaxed text-blue-900">Notion DB 생성과 속성 설정을 자동화할 수 있어 반복 세팅을 줄일 수 있습니다.</p>
+        </article>
+      </div>
+
+      <div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+        <h3 class="font-bold text-slate-950 mb-4">Notion DB 4종 구조</h3>
+        <div class="grid gap-3 md:grid-cols-4 text-sm">
+          <div class="rounded-lg border border-blue-100 bg-blue-50 p-4">
+            <strong class="block text-blue-950 mb-2">Personal Tasks</strong>
+            <p class="text-blue-900">Title, Status, Due Date, Priority</p>
+            <p class="mt-2 text-blue-700">트리거: 개인:</p>
+          </div>
+          <div class="rounded-lg border border-amber-100 bg-amber-50 p-4">
+            <strong class="block text-amber-950 mb-2">Work Tasks</strong>
+            <p class="text-amber-900">Title, Status, Due Date, Tag</p>
+            <p class="mt-2 text-amber-700">트리거: 업무: / 학교:</p>
+          </div>
+          <div class="rounded-lg border border-emerald-100 bg-emerald-50 p-4">
+            <strong class="block text-emerald-950 mb-2">Notes</strong>
+            <p class="text-emerald-900">Title, Content, Date, Priority</p>
+            <p class="mt-2 text-emerald-700">트리거: 메모:</p>
+          </div>
+          <div class="rounded-lg border border-purple-100 bg-purple-50 p-4">
+            <strong class="block text-purple-950 mb-2">Docs</strong>
+            <p class="text-purple-900">Title, Content, Date, Topic</p>
+            <p class="mt-2 text-purple-700">트리거: 배움:</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="day6-skills" class="space-y-10">
+      <div>
+        <p class="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-700 mb-4">SKILLS</p>
+        <h2 class="text-3xl font-extrabold text-slate-950 mb-4">SKILL.md와 CLAUDE.md로 실행 규칙을 나눕니다</h2>
+        <p class="text-lg text-slate-600 max-w-3xl">각 저장 스킬은 실행 방법을 설명하고, CLAUDE.md는 어떤 상황에서 어떤 스킬을 호출할지 결정하는 분류 규칙을 담당합니다.</p>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        <article class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <h3 class="font-bold text-slate-950 mb-4">스킬 폴더 구조</h3>
+          <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
+            <pre class="p-5 overflow-x-auto text-sm text-slate-100"><code>skills/
+  notion-personal.md   # 개인 할일 저장
+  notion-work.md       # 업무/학교 할일 저장
+  notion-notes.md      # 메모 저장
+  notion-docs.md       # 배움 저장
+CLAUDE.md              # 분류 규칙 지시문</code></pre>
+          </div>
+        </article>
+        <article class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <h3 class="font-bold text-slate-950 mb-4">SKILL.md 구조 예시</h3>
+          <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
+            <pre class="p-5 overflow-x-auto text-sm text-slate-100"><code># Personal Tasks 저장 스킬
+
+## 용도
+개인 할일을 Notion Personal Tasks DB에 저장
+
+## 실행 방법
+python skills/notion-personal.py --title "..."</code></pre>
+          </div>
+        </article>
+      </div>
+
+      <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
+        <div class="px-4 py-3 border-b border-slate-700 text-sm font-bold text-slate-200">CLAUDE.md 분류 규칙 예시</div>
+        <pre class="p-5 overflow-x-auto text-sm text-slate-100"><code>## 메모 분류 규칙
+
+사용자가 메모를 입력하면 아래 규칙에 따라 분류하고 Notion에 저장한다:
+
+- "개인:"으로 시작 -> notion-personal 스킬 실행 -> Personal Tasks DB 저장
+- "업무:" 또는 "학교:"로 시작 -> notion-work 스킬 실행 -> Work Tasks DB 저장
+- "메모:"로 시작 -> notion-notes 스킬 실행 -> Notes DB 저장
+- "배움:"으로 시작 -> notion-docs 스킬 실행 -> Docs DB 저장
+
+저장 완료 후 "저장됨: [DB명]" 한 줄만 출력한다.</code></pre>
+      </div>
+    </section>
+
+    <section id="day6-practice" class="space-y-10">
+      <div>
+        <p class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700 mb-4">PRACTICE</p>
+        <h2 class="text-3xl font-extrabold text-slate-950 mb-4">터미널 메모를 Notion에 자동 분류 저장합니다</h2>
+        <p class="text-lg text-slate-600 max-w-3xl">트리거 키워드 입력부터 Claude 분류, 스킬 실행, Notion 저장 완료까지 하나의 흐름으로 검증합니다.</p>
+      </div>
+
+      <div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+        <h3 class="font-bold text-slate-950 mb-4">실행 흐름</h3>
+        <div class="grid gap-3 md:grid-cols-4 text-sm">
+          <div class="rounded-lg border border-blue-100 bg-blue-50 p-4"><strong class="block text-blue-950 mb-1">1. 입력</strong><span class="font-mono text-blue-900">배움: Notion API 필터가 자유롭다</span></div>
+          <div class="rounded-lg border border-slate-200 bg-slate-50 p-4"><strong class="block text-slate-950 mb-1">2. Claude 분류</strong>`배움:` 감지 후 Docs DB 선택</div>
+          <div class="rounded-lg border border-slate-200 bg-slate-50 p-4"><strong class="block text-slate-950 mb-1">3. 스킬 실행</strong>`notion-docs.py`로 API 호출</div>
+          <div class="rounded-lg border border-emerald-100 bg-emerald-50 p-4"><strong class="block text-emerald-950 mb-1">4. 저장 완료</strong>Docs DB에 레코드 생성 후 출력</div>
+        </div>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        <article class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <h3 class="font-bold text-slate-950 mb-4">실습 순서</h3>
+          <ol class="space-y-3 text-sm text-slate-700">
+            <li><strong class="text-blue-700">1.</strong> Claude에게 Notion 저장 스킬 4개 제작을 의뢰합니다.</li>
+            <li><strong class="text-blue-700">2.</strong> CLAUDE.md에 트리거 키워드별 분류 규칙을 작성합니다.</li>
+            <li><strong class="text-blue-700">3.</strong> `개인:`, `업무:`, `메모:`, `배움:` 입력으로 4가지 저장을 테스트합니다.</li>
+          </ol>
+        </article>
+        <article class="rounded-lg border border-emerald-200 bg-emerald-50 p-6 shadow-sm">
+          <h3 class="font-bold text-emerald-950 mb-4">중요도 자동 태깅</h3>
+          <ul class="space-y-3 text-sm text-emerald-900">
+            <li class="rounded-lg bg-white border border-emerald-100 p-3">`급해`, `오늘까지`, `긴급` 포함 -> Priority: 높음</li>
+            <li class="rounded-lg bg-white border border-emerald-100 p-3">`나중에`, `언젠가`, `여유있을때` 포함 -> Priority: 낮음</li>
+            <li class="rounded-lg bg-white border border-emerald-100 p-3">그 외 메모 -> Priority: 보통</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+    </div>
     <section id="content-day7" class="day-content hidden rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center">
       <p class="text-sm font-bold text-slate-400 mb-2">DAY 07</p>
       <h2 class="text-2xl font-extrabold text-slate-900">7일차 콘텐츠 준비중</h2>
@@ -1698,7 +1910,7 @@ Python 스킬을 만들어줘.</code></pre>
       { id: 3, title: '3일차: GWS 자동화', icon: 'briefcase-business' },
       { id: 4, title: '4일차: 외부 API', icon: 'plug-zap' },
       { id: 5, title: '5일차: Notion DB', icon: 'database' },
-      { id: 6, title: '6일차: 준비중', icon: 'lock' },
+      { id: 6, title: '6일차: 세컨드 브레인', icon: 'brain-circuit' },
       { id: 7, title: '7일차: 준비중', icon: 'lock' },
       { id: 8, title: '8일차: 준비중', icon: 'lock' }
     ];
